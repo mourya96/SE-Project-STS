@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info:
+  title: Group-2 Ticket system API
+  description: This yaml file defines the interfaces of different API endpoints.
+  version: 1.0.11
+servers:
+  - url: http://127.0.0.1:5000
+tags:
+  - name: login
+    description: Login Manager API
+  - name: Role
+    description: Role Manager API
+  - name: Ticket
+    description: Ticket Manager API
+  - name: Tag
+    description: Tag Manager API
+  - name: Response
+    description: Response Manager API
+paths:
+  /api/login/{email}:
+    description: End point to read, update and delete a User data for the given email.
+    get:
+      tags:
+        - login
+      description: Operation to Read User resource.
+      operationId: getUser
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            example: "user1@gmail.com"
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: user not found
+        "500":
+          description: Internal Server Error
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 10
+        username:
+          type: string
+          example: user1
+        email:
+          type: string
+          example: user1@gmail.com
+        password:
+          type: string
+          example: abc

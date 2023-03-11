@@ -3,7 +3,8 @@ import os
 from flask import Flask
 from flask_restful import Api
 
-from Login_manager_api import Login_api, Role_api
+from Login_manager_api import Login_api
+from Role_manager_api import Role_api
 from model import db
 
 app = Flask(__name__)
