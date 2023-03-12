@@ -51,12 +51,12 @@ class Tag_api(Resource):
          # Checking type of tag and editing the tag_name subsequently
         tag_obj = None
         if tag_type == 'subject':
-            
-            #Checking if the subject exists with the given tag_id
+
+            # Checking if the subject exists with the given tag_id
             tag_obj = Subject_Tag.query.filter_by(subject_id=tag_id).first()
 
-            #Checking if the new subject name exists in table
-            obj=Subject_Tag.query.filter_by(subject_name=tag_name).first()
+            # Checking if the new subject name exists in table
+            obj = Subject_Tag.query.filter_by(subject_name=tag_name).first()
             if not tag_obj:
                 raise DataError(status_code=404)
             elif obj:
@@ -67,8 +67,8 @@ class Tag_api(Resource):
         elif tag_type == 'secondary':
             tag_obj = Secondary_Tag.query.filter_by(sec_tag_id=tag_id).first()
 
-            #Checking if the new subject name exists in table
-            obj=Secondary_Tag.query.filter_by(sec_tag_name=tag_name).first()
+            # Checking if the new subject name exists in table
+            obj = Secondary_Tag.query.filter_by(sec_tag_name=tag_name).first()
 
             if not tag_obj:
                 raise DataError(status_code=404)

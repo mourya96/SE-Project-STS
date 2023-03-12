@@ -11,12 +11,12 @@ class Ticket_api(Resource):
     ticket_output = {"ticket_id": fields.Integer,
                      "title": fields.String,
                      "description": fields.String,
-                      "subject_name":fields.String,
-                     "sec_name":fields.String,
+                     "subject_name": fields.String,
+                     "sec_name": fields.String,
                      "isFAQ": fields.Boolean,
                      "ticket_status": fields.String,
                      "likes": fields.Integer(attribute=lambda x: len(x.likes))
-                    }
+                     }
 
     @marshal_with(ticket_output)
     def put(self, ticket_id: int):
@@ -36,11 +36,11 @@ class Ticket_api(Resource):
 
         # Changes in database based on action variable from form
         if form.get("action") == 'faq':
-            if ticket_obj.ticket_status=="resolved":
+            if ticket_obj.ticket_status == "resolved":
                 ticket_obj.isFAQ = True
             else:
                 raise LogicError(status_code=400, error_code="TICKET004",
-                             error_msg="Ticket need to be resolved")
+                                 error_msg="Ticket need to be resolved")
 
         elif form.get("action") == 'like':
             for like in ticket_obj.likes:
