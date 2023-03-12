@@ -13,40 +13,40 @@ class Tag_api(Resource):
                   "sec_name": fields.String(attribute='sec_tag_name')}
 
     @marshal_with(tag_output)
-    def get(self, tag_type: str):
+    def get(self, tag_type: str, tag_id: int = None):
         '''Getting the tag details'''
+
         if tag_type == 'subject':
-            tags = Subject_Tag.query.all()
+            if tag_id  is None:
+                tags = Subject_Tag.query.all()
+            else:
+                tags= Subject_Tag.query.filter_by(subject_id=tag_id).first()
         elif tag_type == 'secondary':
-            tags = Secondary_Tag.query.all()
-        else:
+            if tag_id is None:
+                tags = Secondary_Tag.query.all()
+            else:
+                tags= Secondary_Tag.query.filter_by(sec_tag_id=tag_id).first()
+
+        if not tags:    
             raise DataError(status_code=404)
 
         return tags, 200
 
     @marshal_with(tag_output)
-    def put(self):
+    def put(self, tag_type:str):
         '''Modifies the tag details'''
 
         # Getting form data
         form = request.get_json()
-        tag_type = form.get("tag_type")
         tag_name = form.get("tag_name")
         tag_id = int(form.get("tag_id"))
 
-        form_data = [tag_type, tag_name]
 
-        # Checking if all the form data is filled up
-        if None in form_data:
-            raise LogicError(status_code=400, error_code="TAG006",
-                             error_msg="Some form data is missing")
-
-        # Checking the type of the data in form
-        for data in form_data:
-            if type(data) != str or len(data) == 0:
-                raise LogicError(status_code=400,
-                                 error_code='TAG007',
-                                 error_msg='Tag_type or Tag_name should be non-empty string')
+        # Checking if tag_name is non-empty
+        if tag_name is None or type(tag_name) !=str or len(tag_name)==0:
+            raise LogicError(status_code=400, error_code="TAG001",
+                             error_msg="Tag_name should be non-empty string")
+        
 
          # Checking type of tag and editing the tag_name subsequently
         tag_obj = None
@@ -61,7 +61,7 @@ class Tag_api(Resource):
                 raise DataError(status_code=404)
             elif obj:
                 raise LogicError(status_code=400,
-                                 error_code='TAG008',
+                                 error_code='TAG002',
                                  error_msg='Subject_name already exists')
             tag_obj.subject_name = tag_name
         elif tag_type == 'secondary':
@@ -74,39 +74,26 @@ class Tag_api(Resource):
                 raise DataError(status_code=404)
             elif obj:
                 raise LogicError(status_code=400,
-                                 error_code='TAG009',
+                                 error_code='TAG003',
                                  error_msg='Secondary tag name already exists')
             tag_obj.sec_tag_name = tag_name
-        else:
-            raise LogicError(status_code=400,
-                             error_code='TAG005',
-                             error_msg='The tag is not edited as tag_type value should either be subject or secondary ')
 
         db.session.commit()
         return tag_obj, 202
 
     @marshal_with(tag_output)
-    def post(self):
+    def post(self, tag_type:str):
         '''Creates a new tag based on tag type'''
 
         # Getting form data
         form = request.get_json()
-        tag_type = form.get("tag_type")
         tag_name = form.get("tag_name")
 
-        form_data = [tag_type, tag_name]
 
-        # Checking if all the form data is filled up
-        if None in form_data:
+        # Checking if all the tag_name is non-empty string
+        if tag_name is None or type(tag_name) !=str or len(tag_name)==0:
             raise LogicError(status_code=400, error_code="TAG001",
-                             error_msg="Some form data is missing")
-
-        # Checking the type of the data in form
-        for data in form_data:
-            if type(data) != str:
-                raise LogicError(status_code=400,
-                                 error_code='TAG002',
-                                 error_msg='The form data should be in string format')
+                             error_msg="Tag_name should be non-empty string")
 
         # Checking type of tag and making a tag object subsequently
         tag_obj = None
@@ -115,22 +102,17 @@ class Tag_api(Resource):
                 subject_name=tag_name).first()
             if tag_obj:
                 raise LogicError(status_code=400,
-                                 error_code='TAG003',
-                                 error_msg='The subject already exists.You cannot create duplicate subject')
+                                 error_code='TAG002',
+                                 error_msg='Subject_name already exists.')
             tag_obj = Subject_Tag(subject_name=tag_name)
         elif tag_type == 'secondary':
             tag_obj = Secondary_Tag.query.filter_by(
                 sec_tag_name=tag_name).first()
             if tag_obj:
                 raise LogicError(status_code=400,
-                                 error_code='TAG004',
-                                 error_msg='The secondary tag already exists.You cannot create duplicate secondary tag')
+                                 error_code='TAG003',
+                                 error_msg='Secondary tag name already exists.')
             tag_obj = Secondary_Tag(sec_tag_name=tag_name)
-
-        else:
-            raise LogicError(status_code=400,
-                             error_code='TAG005',
-                             error_msg='The tag is not created as tag_type value should either be subject or secondary ')
 
         # committing to database
         if tag_obj:
