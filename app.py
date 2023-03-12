@@ -25,7 +25,7 @@ api.add_resource(Ticket_api, '/api/subject/ticket/<int:ticket_id>',
                  '/api/subject/<string:subject_name>')
 
 api.add_resource(Tag_api,
-                 '/api/tag/<string:tag_type>', '/api/tag/<int:sec_tag_id>','/api/tag/<string:tag_type>/<int:tag_id>')
+                 '/api/tag/<string:tag_type>','/api/tag/<string:tag_type>/<int:tag_id>')
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port='5500')

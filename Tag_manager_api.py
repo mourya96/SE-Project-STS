@@ -33,13 +33,13 @@ class Tag_api(Resource):
         return tags, 200
 
     @marshal_with(tag_output)
-    def put(self, tag_type:str):
+    def put(self, tag_type:str,tag_id:int):
         '''Modifies the tag details'''
 
         # Getting form data
         form = request.get_json()
         tag_name = form.get("tag_name")
-        tag_id = int(form.get("tag_id"))
+        
 
 
         # Checking if tag_name is non-empty
@@ -120,9 +120,17 @@ class Tag_api(Resource):
             db.session.commit()
             return tag_obj, 201
 
-    def delete(self, sec_tag_id: int):
+    def delete(self, tag_type:str,tag_id: int):
         '''Deletes the tag-power given only to admin'''
-        tag_obj = Secondary_Tag.query.filter_by(sec_tag_id=sec_tag_id).first()
+        if tag_type=='subject':
+            raise LogicError(status_code=400,
+                                 error_code='TAG004',
+                                 error_msg='Subject tag cannot be deleted')
+        if tag_type != 'secondary':
+            raise LogicError(status_code=400,
+                                 error_code='TAG005',
+                                 error_msg='The url should contain secondary')
+        tag_obj = Secondary_Tag.query.filter_by(sec_tag_id=tag_id).first()
         if not tag_obj:
             raise DataError(status_code=404)
         db.session.delete(tag_obj)
