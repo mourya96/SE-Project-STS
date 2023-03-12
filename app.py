@@ -22,4 +22,4 @@ api.add_resource(Role_api, '/api/role', '/api/role/<int:user_id>')
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0',port='5500')
