@@ -43,16 +43,14 @@ class Role_api(Resource):
                              error_msg='Tag-id must be provided')
 
         # checking for which operation to perform
-        if form.get('status'):
-            # obj.status = form.get('status')
-            obj.status = False
         if form.get('subject_id'):
             if Subject_Tag.query.filter_by(subject_id=form.get('subject_id')).first():
                 obj.subject_id = form.get('subject_id')
             else:
                 raise LogicError(status_code=404, error_code='STAFF002',
                                  error_msg='Valid Subject-id is required')
-        print(form.get('status'), obj.status)
+        if form.get('status') is not None:
+            obj.status = form.get('status')
 
         db.session.commit()
         return obj, 202
