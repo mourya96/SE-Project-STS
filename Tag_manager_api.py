@@ -4,7 +4,8 @@ from model import User,db, Staff, Secondary_Tag,Subject_Tag,Ticket, Table_likes,
 
 from custom_error import DataError, LogicError
 
-
+tag_output={'tag_id':fields.Integer,
+            'tag_name':fields.String}
 
 
 class Tag_api(Resource):
