@@ -30,7 +30,7 @@ class Ticket_api(Resource):
         # Checking action from form data
         if form.get("action") is None or form.get("user_id") is None:
             raise LogicError(status_code=400, error_code="TICKET001",
-                             error_msg="Either of the form data is missing")
+                             error_msg="Either user_id or action type is missing")
 
         user_id = form.get("user_id")
 
@@ -39,8 +39,8 @@ class Ticket_api(Resource):
             if ticket_obj.ticket_status == "resolved":
                 ticket_obj.isFAQ = True
             else:
-                raise LogicError(status_code=400, error_code="TICKET004",
-                                 error_msg="Ticket need to be resolved")
+                raise LogicError(status_code=400, error_code="TICKET002",
+                                 error_msg="Ticket need to be resolved before marking as FAQ")
 
         elif form.get("action") == 'like':
             for like in ticket_obj.likes:
@@ -75,14 +75,22 @@ class Ticket_api(Resource):
 
         # Checking if all the form data is filled up
         if None in form_data:
-            raise LogicError(status_code=400, error_code="TICKET002",
-                             error_msg="Some form data is missing")
+            raise LogicError(status_code=400, error_code="TICKET003",
+                             error_msg="Some data required for creating ticket is missing")
+        
+        tickets= Ticket.query.filter_by(subject_name=subject_name).all()
+        
+        #Checking for duplicate titles
+        for ticket in tickets:
+            if ticket.title.lower()==title.lower():
+                raise LogicError(status_code=400, error_code="TICKET004",
+                             error_msg="Duplicate title for the subject.You are requested to search for the title")
 
         # Checking if secondary tag is present in Secondary Tag class
         sec_obj = Secondary_Tag.query.filter_by(sec_tag_name=sec).first()
         if sec_obj is None:
-            raise LogicError(status_code=400, error_code="TICKET003",
-                             error_msg="secondary tag selected is not available")
+            raise LogicError(status_code=400, error_code="TICKET005",
+                             error_msg="Secondary tag entered is not available")
 
         # Creating ticket obj and committing to database
         ticket_obj = Ticket(user_id=user_id, title=title,
