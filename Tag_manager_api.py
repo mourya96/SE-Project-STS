@@ -1,5 +1,4 @@
 from flask import request, jsonify
-from app import api
 from flask_restful import fields, marshal_with, Resource
 from model import User,db, Staff, Secondary_Tag,Subject_Tag,Ticket, Table_likes, Response
 
@@ -72,13 +71,13 @@ class Tag_api(Resource):
         
        
     
-    @marshal_with(tag_output)
+    
     def post(self):
         '''Creates a new tag based on tag type'''
               
         #Getting form data
         form = request.get_json()
-        tag_type= form.get("type")
+        tag_type= form.get("tag_type")
         tag_name=form.get("tag_name")
         
         form_data=[tag_type, tag_name]
@@ -110,6 +109,7 @@ class Tag_api(Resource):
                                  error_code='TAG004',
                                  error_msg='The secondary tag already exists.You cannot create duplicate secondary tag')
             tag_obj=Secondary_Tag(sec_tag_name=tag_name)
+            
         else:
             raise LogicError(status_code=400,
                                  error_code='TAG005',

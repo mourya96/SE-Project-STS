@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from app import api
+
 from flask_restful import fields, marshal_with, reqparse, Resource
 from model import User,db, Staff, Secondary_Tag,Subject_Tag,Ticket, Table_likes, Response
 
