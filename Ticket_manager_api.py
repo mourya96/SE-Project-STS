@@ -5,14 +5,6 @@ from model import User,db, Staff, Secondary_Tag,Subject_Tag,Ticket, Table_likes,
 
 from custom_error import DataError, LogicError
 
-create_ticket_parser = reqparse.RequestParser()
-create_ticket_parser.add_argument('title', type=str, required=True)
-create_ticket_parser.add_argument('description', type=str, required=True)
-
-update_ticket_parser = reqparse.RequestParser()
-update_ticket_parser.add_argument('action', type=str, required=True)
-
-
 class Ticket_api(Resource):
     '''API code for Ticket Manager'''
 
@@ -33,7 +25,7 @@ class Ticket_api(Resource):
         form= request.get_json()
         
         #Checking action from form data
-        if form.action is None or form.user_id is None:
+        if form.get("action") is None or form.get("user_id") is None:
             raise LogicError(status_code=400, error_code="TICKET001",
                              error_msg="Either of the form data is missing")
         
