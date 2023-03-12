@@ -71,7 +71,7 @@ class Login_api(Resource):
         '''Creates a new User details'''
 
         form = request.get_json()
-        
+
         # Checking whether a user record with same email is present
         if User.query.filter_by(email=form.get('email')).first():
             raise DataError(status_code=409)
@@ -79,12 +79,12 @@ class Login_api(Resource):
         # If role=staff then insert tag-id into Staff table
         if form.get('role') == 'staff':
             # Checking if tag-id is correct or not
-            if Subject_Tag.query.filter_by(subject_id=form.get('tag_id')).first() is None:
+            if Subject_Tag.query.filter_by(subject_id=form.get('subject_id')).first() is None:
                 raise DataError(status_code=404)
 
             obj = Staff(username=form.get('username'), email=form.get("email"),
                         password=form.get("password"), role=form.get("role"),
-                        subject_id=form.get('tag_id'))
+                        subject_id=form.get('subject_id'))
         else:
             obj = User(username=form.get('username'), email=form.get("email"),
                        password=form.get("password"), role=form.get("role"))

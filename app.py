@@ -20,7 +20,8 @@ db.create_all()
 
 api.add_resource(Login_api, '/api/register', '/api/login/<string:email>')
 api.add_resource(Role_api, '/api/role', '/api/role/<int:user_id>')
-api.add_resource(Ticket_api, '/api/subject/ticket/<int:ticket_id>','/api/subject/<string:subject_name>')
+api.add_resource(Ticket_api, '/api/subject/ticket/<int:ticket_id>',
+                 '/api/subject/<string:subject_name>')
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0',port='5500')
+    app.run(debug=True, host='0.0.0.0', port='5500')
