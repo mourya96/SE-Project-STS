@@ -71,7 +71,7 @@ class Login_api(Resource):
         '''Creates a new User details'''
 
         form = request.get_json()
-
+        
         # Checking whether a user record with same email is present
         if User.query.filter_by(email=form.get('email')).first():
             raise DataError(status_code=409)
@@ -93,13 +93,13 @@ class Login_api(Resource):
         if obj.email is None or type(obj.email) != str or len(obj.email) == 0:
             raise LogicError(status_code=400, error_code="USER001",
                              error_msg="Email is required and must be a non empty string.")
-        if obj.password is None or type(obj.password) != str or len(obj.password) > 4:
+        if obj.password is None or type(obj.password) != str or len(obj.password) <= 4:
             raise LogicError(status_code=400, error_code="USER002",
                              error_msg="Password is required and must be string with length>4.")
         if obj.username is None or type(obj.username) != str or len(obj.username) == 0:
             raise LogicError(status_code=400, error_code="USER003",
                              error_msg="Username is required and must be a non empty string.")
-        if form.role is None or type(form.role) != str:
+        if form.get("role") is None or type(form.get("role")) != str:
             raise LogicError(status_code=400, error_code="USER004",
                              error_msg="Role is required and must be a non empty string.")
 
