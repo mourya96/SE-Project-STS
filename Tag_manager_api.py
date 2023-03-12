@@ -8,7 +8,7 @@ from model import Secondary_Tag, Subject_Tag, db
 class Tag_api(Resource):
     '''API code for Ticket Manager'''
 
-    tag_output = {"subject_id": fields.Integer, "subject_name": fields.String,
+    tag_output = {"subject_id": fields.Integer(default=-1), "subject_name": fields.String,
                   "sec_id": fields.Integer(attribute='sec_tag_id'),
                   "sec_name": fields.String(attribute='sec_tag_name')}
 
