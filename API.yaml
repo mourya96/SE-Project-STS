@@ -22,7 +22,7 @@ paths:
     get:
       tags:
         - login
-      description: Operation to Read User resource.
+      description: Operation to Read User details.
       operationId: getUser
       parameters:
         - in: path
@@ -39,9 +39,126 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
         "404":
-          description: user not found
+          description: User not found
         "500":
           description: Internal Server Error
+    put:
+      tags:
+        - login
+      description: "Operation to Edit User details"
+      operationId: editUser
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            example: "user1@gmail.com"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  example: "password123"
+                role:
+                  type: string
+                  example: "staff"
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "404":
+          description: User not found
+        "500":
+          description: Internal Server Error
+    delete:
+      tags:
+        - login
+      description: "Operation to Delete User details"
+      operationId: deleteUser
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            example: "user1@gmail.com"
+      responses:
+        "200":
+          description: Request Successful
+        "404":
+          description: User not found
+        "500":
+          description: Internal Server Error
+  /api/register:
+    post:
+      tags:
+        - login
+      description: "Operation to Delete User details"
+      operationId: newUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: staffav
+                email:
+                  type: string
+                  example: staff11@gmail.com
+                password:
+                  type: string
+                  example: "abcd3"
+                role:
+                  type: string
+                  example: "staff"
+                subject_id:
+                  type: integer
+                  example: 1
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "404":
+          description: User not found
+        "409":
+          description: Given email is used by another user.
+        "500":
+          description: Internal Server Error
+
 components:
   schemas:
     User:
@@ -59,3 +176,6 @@ components:
         password:
           type: string
           example: abc
+        role:
+          type: string
+          example: student

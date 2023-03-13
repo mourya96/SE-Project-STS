@@ -17,36 +17,33 @@ class Tag_api(Resource):
         '''Getting the tag details'''
 
         if tag_type == 'subject':
-            if tag_id  is None:
+            if tag_id is None:
                 tags = Subject_Tag.query.all()
             else:
-                tags= Subject_Tag.query.filter_by(subject_id=tag_id).first()
+                tags = Subject_Tag.query.filter_by(subject_id=tag_id).first()
         elif tag_type == 'secondary':
             if tag_id is None:
                 tags = Secondary_Tag.query.all()
             else:
-                tags= Secondary_Tag.query.filter_by(sec_tag_id=tag_id).first()
+                tags = Secondary_Tag.query.filter_by(sec_tag_id=tag_id).first()
 
-        if not tags:    
+        if not tags:
             raise DataError(status_code=404)
 
         return tags, 200
 
     @marshal_with(tag_output)
-    def put(self, tag_type:str,tag_id:int):
+    def put(self, tag_type: str, tag_id: int):
         '''Modifies the tag details'''
 
         # Getting form data
         form = request.get_json()
         tag_name = form.get("tag_name")
-        
-
 
         # Checking if tag_name is non-empty
-        if tag_name is None or type(tag_name) !=str or len(tag_name)==0:
+        if tag_name is None or type(tag_name) != str or len(tag_name) == 0:
             raise LogicError(status_code=400, error_code="TAG001",
                              error_msg="Tag_name should be non-empty string")
-        
 
          # Checking type of tag and editing the tag_name subsequently
         tag_obj = None
@@ -82,16 +79,15 @@ class Tag_api(Resource):
         return tag_obj, 202
 
     @marshal_with(tag_output)
-    def post(self, tag_type:str):
+    def post(self, tag_type: str):
         '''Creates a new tag based on tag type'''
 
         # Getting form data
         form = request.get_json()
         tag_name = form.get("tag_name")
 
-
         # Checking if all the tag_name is non-empty string
-        if tag_name is None or type(tag_name) !=str or len(tag_name)==0:
+        if tag_name is None or type(tag_name) != str or len(tag_name) == 0:
             raise LogicError(status_code=400, error_code="TAG001",
                              error_msg="Tag_name should be non-empty string")
 
@@ -120,16 +116,16 @@ class Tag_api(Resource):
             db.session.commit()
             return tag_obj, 201
 
-    def delete(self, tag_type:str,tag_id: int):
+    def delete(self, tag_type: str, tag_id: int):
         '''Deletes the tag-power given only to admin'''
-        if tag_type=='subject':
+        if tag_type == 'subject':
             raise LogicError(status_code=400,
-                                 error_code='TAG004',
-                                 error_msg='Subject tag cannot be deleted')
+                             error_code='TAG004',
+                             error_msg='Subject tag cannot be deleted')
         if tag_type != 'secondary':
             raise LogicError(status_code=400,
-                                 error_code='TAG005',
-                                 error_msg='The url should contain secondary')
+                             error_code='TAG005',
+                             error_msg='The url should contain secondary')
         tag_obj = Secondary_Tag.query.filter_by(sec_tag_id=tag_id).first()
         if not tag_obj:
             raise DataError(status_code=404)

@@ -20,7 +20,7 @@ class Login_api(Resource):
 
         # Checking whether user record is present
         if obj is None:
-            raise DataError(status_code=400)
+            raise DataError(status_code=404)
 
         # Checking for role=staff then check for approval status
         if obj.role == 'staff':
@@ -39,16 +39,16 @@ class Login_api(Resource):
         if obj is None:
             raise DataError(status_code=404)
         # Input data checking
-        if form.password is None or type(form.password) != str or len(form.password) > 4:
+        if form.get('password') is None or type(form.get('password')) != str or len(form.get('password')) <= 4:
             raise LogicError(status_code=400, error_code="USER002",
                              error_msg="Password is required and must be string with length>4.")
         else:
             obj.password = form.get("password")
-        if form.role is None or type(form.role) != str:
+        if form.get('role') is None or type(form.get('role')) != str:
             raise LogicError(status_code=400, error_code="USER003",
                              error_msg="Role is required and must be string.")
         else:
-            obj.password = form.get("role", None)
+            obj.role = form.get("role", None)
 
         db.session.commit()
         return obj, 202
