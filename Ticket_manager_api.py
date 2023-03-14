@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource, fields, marshal_with
 
 from custom_error import DataError, LogicError
-from model import Secondary_Tag, Subject_Tag, Table_likes, Ticket, db
+from model import Secondary_Tag, Subject_Tag, Table_likes, Ticket, db,User
 
 
 class Ticket_api(Resource):
@@ -34,13 +34,18 @@ class Ticket_api(Resource):
 
         user_id = form.get("user_id")
 
+        user= User.query.filter_by(user_id=user_id).first()
         # Changes in database based on action variable from form
         if form.get("action") == 'faq':
+            if user.role=='student':
+                raise LogicError(status_code=400, error_code="TICKET006",
+                                 error_msg="A student cannot mark the ticket as FAQ")
             if ticket_obj.ticket_status == "resolved":
                 ticket_obj.isFAQ = True
-            else:
+            elif ticket_obj.ticket_status == "unresolved":
                 raise LogicError(status_code=400, error_code="TICKET002",
                                  error_msg="Ticket need to be resolved before marking as FAQ")
+            
 
         elif form.get("action") == 'like':
             for like in ticket_obj.likes:

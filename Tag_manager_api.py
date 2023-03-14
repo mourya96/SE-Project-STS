@@ -13,19 +13,24 @@ class Tag_api(Resource):
                   "sec_name": fields.String(attribute='sec_tag_name')}
 
     @marshal_with(tag_output)
-    def get(self, tag_type: str, tag_id: int = None):
+    def get(self, tag_type: str, tag_id: int=None):
         '''Getting the tag details'''
-
+        
         if tag_type == 'subject':
             if tag_id is None:
+                
                 tags = Subject_Tag.query.all()
             else:
                 tags = Subject_Tag.query.filter_by(subject_id=tag_id).first()
+                if not tags:
+                    raise DataError(status_code=404)
         elif tag_type == 'secondary':
             if tag_id is None:
                 tags = Secondary_Tag.query.all()
             else:
                 tags = Secondary_Tag.query.filter_by(sec_tag_id=tag_id).first()
+                if not tags:
+                    raise DataError(status_code=404)
 
         if not tags:
             raise DataError(status_code=404)
