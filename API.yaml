@@ -306,6 +306,7 @@ paths:
       parameters:
         - in: path
           name: email
+          description: Enter the email-id of the staff whose data is to be fetched.
           required: true
           schema:
             type: string
@@ -329,6 +330,7 @@ paths:
       parameters:
         - in: path
           name: email
+          description: Enter the email-id of the staff whose data is to be edited.
           required: true
           schema:
             type: string
@@ -375,6 +377,7 @@ paths:
       parameters:
         - in: path
           name: email
+          description: Enter the email-id of the staff whose data is to be delete.
           required: true
           schema:
             type: string
@@ -390,7 +393,7 @@ paths:
     post:
       tags:
         - login
-      description: "Operation to Create a new User details. When role=staff subject_id is must but not required for role=student."
+      description: "Operation to Create a new User details. When `role=staff` subject_id is must but not required for `role=student`."
       operationId: newUser
       requestBody:
         content:
@@ -435,6 +438,107 @@ paths:
           description: User not found
         "409":
           description: Given email is used by another user.
+        "500":
+          description: Internal Server Error
+  /api/role:
+    get:
+      tags:
+        - Role
+      description: Operation to Read Staff details.
+      operationId: getStaffData
+      parameters:
+        - in: query
+          name: status
+          description: Provide the status to filter staff's data based on it.
+          schema:
+            type: string
+          examples:
+            null:
+              value: ""
+            true:
+              value: 1
+            false:
+              value: 0
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Role"
+        "404":
+          description: No staff Data found
+        "500":
+          description: Internal Server Error
+  /api/role/{user_id}:
+    put:
+      tags:
+        - Role
+      description: Operation to change `status` or `subject-id` or both of the Staff.
+      operationId: editStaffData
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+            example: 1
+          description: Enter the user-id for the staff's data to edit.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subject_id:
+                  type: integer
+                  example: 1
+                status:
+                  type: boolean
+                  example: true
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/Role"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "404":
+          description: No staff Data found
+        "500":
+          description: Internal Server Error
+    delete:
+      tags:
+        - Role
+      description: Operation to delete data of the Staff.
+      operationId: deleteStaffData
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+            example: 2
+          description: Enter the user-id for the staff's data to be deleted.
+      responses:
+        "200":
+          description: Request Successful
+        "404":
+          description: No staff Data found
         "500":
           description: Internal Server Error
   /api/subject/ticket/{ticket_id}:
@@ -730,6 +834,7 @@ paths:
                     type: string
         "500":
           description: Internal Server Error
+
 components:
   schemas:
     User:
@@ -750,6 +855,27 @@ components:
         role:
           type: string
           example: student
+    Role:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: staff1
+        email:
+          type: string
+          example: staff1@gmail.com
+        approved:
+          type: boolean
+          example: true
+        role:
+          type: string
+          example: staff
+        subject_id:
+          type: integer
+          example: 1
     Ticket:
       type: object
       properties:

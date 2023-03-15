@@ -47,7 +47,7 @@ class Role_api(Resource):
             if Subject_Tag.query.filter_by(subject_id=form.get('subject_id')).first():
                 obj.subject_id = form.get('subject_id')
             else:
-                raise LogicError(status_code=404, error_code='STAFF002',
+                raise LogicError(status_code=400, error_code='STAFF002',
                                  error_msg='Valid Subject-id is required')
         if form.get('status') is not None:
             obj.status = form.get('status')
