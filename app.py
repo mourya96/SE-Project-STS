@@ -2,9 +2,8 @@ import os
 
 from flask import Flask
 from flask_restful import Api
-
-from Login_manager_api import Login_api
 from model import db
+from Login_manager_api import Login_api
 from Role_manager_api import Role_api
 from Tag_manager_api import Tag_api
 from Ticket_manager_api import Ticket_api
