@@ -28,7 +28,7 @@ class Responses_api(Resource):
         if que:
             return que, 200
         else:
-            return DataError(status_code=404, error_code="RESPONSE001",
+            raise LogicError(status_code=404, error_code="RESPONSE001",
                              error_msg="Invalid ticket id")
     
 
@@ -56,7 +56,7 @@ class Responses_api(Resource):
 
             return que, 201
         else:
-            raise DataError(status_code = 404, error_code="RESPONSE001",
+            raise LogicError(status_code = 404, error_code="RESPONSE001",
                              error_msg="Invalid ticket id")
     
 
@@ -66,25 +66,26 @@ class Responses_api(Resource):
         obj = Response.query.filter_by(response_id = response_id).first()
 
         if obj is None:
-            raise DataError(status_code = 404, error_code="RESPONSE002",
+            raise LogicError(status_code = 404, error_code="RESPONSE002",
                              error_msg="Invalid response id")
         else:
             form = request.get_json()
-            if form.get("isAnswer") is None or isinstance(form.get('isAnswer'), bool):
+            if form.get("isAnswer") is None:
                 raise LogicError(status_code=400, error_code="RESPONSE004",
                                 error_msg="'isAnswer' field is missing or invalid format")
                
             que = Ticket.query.filter_by(ticket_id = ticket_id).first()
             if que is None:
-                raise DataError(status_code=404, error_code='RESPONSE001',
+                raise LogicError(status_code=404, error_code='RESPONSE001',
                                 error_msg="Invalid response id")
             ticket_status = form.get('ticket_status')
-            if ticket_status is None or isinstance(ticket_status, str):
+            if ticket_status is None:
                 raise LogicError(status_code=400, error_code='RESPONSE005',
                                  error_msg= "'ticket_status field is missing or invalid format")
-            elif ticket_status.lower() == 'unresolved' or ticket_status.lower() == 'resolved':
+            # checking if ticket status is either "unresolved" or "resolved"
+            elif (ticket_status.lower() != "unresolved") == (ticket_status.lower() != "resolved"):
                 raise LogicError(status_code=400, error_code='RESPONSE005', 
-                                error_msg='Invalid value for ticket_status, it should be either "resolved" or "unresolved"')
+                                error_msg='Invalid value for ticket_status, it should be either \'resolved\' or \'unresolved\'')
 
             obj.isAnswer = form.get('isAnswer')
             que.ticket_status = form.get('ticket_status').lower()

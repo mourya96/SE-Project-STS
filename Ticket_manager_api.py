@@ -30,7 +30,7 @@ class Ticket_api(Resource):
         # and initialize the values
         obj = Subject_Tag.query.filter_by(subject_name = subject_name).first()
         if obj is None:
-            raise DataError(status_code=404, error_code="TICKET006",
+            raise LogicError(status_code=404, error_code="TICKET006",
                             error_msg="invalid subject")
         for key in params.keys():
             if key == 'FAQ':
