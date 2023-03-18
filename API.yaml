@@ -294,16 +294,11 @@ info:
             <tr>
                 <td>TICKET</td>
                 <td>TICKET004</td>
-                <td>Duplicate title for the subject.You are requested to search for the title.</td>
-            </tr>
-            <tr>
-                <td>TICKET</td>
-                <td>TICKET005</td>
                 <td>Secondary tag entered is not available.</td>
             </tr>
             <tr>
                 <td>TICKET</td>
-                <td>TICKET006</td>
+                <td>TICKET005</td>
                 <td>A student cannot mark the ticket as FAQ.</td>
             </tr>
         </tbody>
@@ -687,6 +682,8 @@ paths:
                     type: string
         "404":
           description: Subject not found
+        "409":
+          description: Duplicate title for the Subject
         "500":
           description: Internal Server Error
   /api/tag/{tag_type}/{tag_id}:
@@ -694,7 +691,7 @@ paths:
     get:
       tags:
         - Tag
-      description: Operation to Read Tag details. Tag type can be `subject` or `secondary`
+      description: Operation to Read Tag details.  Tag type can be `subject` or `secondary`.<br><br> The json object returned can contain two types of responses having either only subject data with  `"sec_id":0 and "sec_name":null` or secondary tag detail with `"subject_id":0 and "subject_name":null,`
       operationId: getTag
       parameters:
         - in: path
@@ -715,7 +712,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Tag-1"
+                $ref: "#/components/schemas/Tag"
         "404":
           description: Tag not found
         "500":
@@ -754,7 +751,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Tag-1"
+                $ref: "#/components/schemas/Tag"
         "400":
           description: Bad Request
           content:
@@ -815,7 +812,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Tag-2"
+                $ref: "#/components/schemas/TagList"
         "404":
           description: User not found
         "500":
@@ -848,7 +845,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Tag-1"
+                $ref: "#/components/schemas/Tag"
         "400":
           description: Bad Request
           content:
@@ -931,7 +928,7 @@ components:
         likes:
           type: integer
           example: 0
-    Tag-1:
+    Tag:
       type: object
       properties:
         subject_id:
@@ -946,10 +943,10 @@ components:
         sec_name:
           type: string
           example: null
-    Tag-2:
+    TagList:
       type: array
       xml:
         name: tags
         wrapped: true
       items:
-        $ref: "#/components/schemas/Tag-1"
+        $ref: "#/components/schemas/Tag"
