@@ -2,283 +2,311 @@ openapi: 3.0.3
 info:
   title: Group-2 Ticket system API
   description: >
-    <div>This RESTful API, database models has been created using Flask-RESTful  and     flask-SQLAlchemy. 
-
+    <div>
+        This RESTful API, database models has been created using Flask-RESTful and flask-SQLAlchemy.
     </div>
 
-    <h3> User Table Schema </h3> 
+    <h3> User Table Schema </h3>
     <table>
-      <thead>
-        <th>Column Name</th>
-        <th>Column Type</th>
-        <th>Constraints</th>
-      </thead>
-      <tbody>
-      <tr>
-        <td>user_id</td>
-        <td>Integer</td>
-        <td>Primary Key, Auto Increment</td>
-      </tr>
-      <tr>
-        <td>username</td>
-        <td>String</td>
-        <td>Not Null</td>
-      </tr>
-      <tr>
-        <td>email</td>
-        <td>String</td>
-        <td>Not Null</td>
-      </tr>
-      <tr>
-        <td>password</td>
-        <td>String</td>
-        <td>Not Null</td>
-      </tr>      
-       <tr>
-        <td>role</td>
-        <td>String</td>
-        <td>Not Null 0</td>
-      </tr> 
-               
-    </tbody>
+        <thead>
+            <th>Column Name</th>
+            <th>Column Type</th>
+            <th>Constraints</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>user_id</td>
+                <td>Integer</td>
+                <td>Primary Key, Auto Increment</td>
+            </tr>
+            <tr>
+                <td>username</td>
+                <td>String</td>
+                <td>Not Null</td>
+            </tr>
+            <tr>
+                <td>email</td>
+                <td>String</td>
+                <td>Not Null</td>
+            </tr>
+            <tr>
+                <td>password</td>
+                <td>String</td>
+                <td>Not Null</td>
+            </tr>
+            <tr>
+                <td>role</td>
+                <td>String</td>
+                <td>Not Null 0</td>
+            </tr>
+        </tbody>
     </table>
 
-    <h3> Staff Table Schema </h3> 
+    <h3> Staff Table Schema </h3>
     <table>
-      <thead>
-        <th>Column Name</th>
-        <th>Column Type</th>
-        <th>Constraints</th>
-      </thead>
-      <tbody>
-      <tr>
-        <td>user_id</td>
-        <td>Integer</td>
-        <td>Foreign Key(User.user_id)</td>
-      </tr>
-      <tr>
-        <td>status</td>
-        <td>Boolean</td>
-        <td>Not Null, Default=False</td>
-      </tr>
-      <tr>
-        <td>subject_id</td>
-        <td>Integer</td>
-        <td>Foreign Key(Subject_Tag.subject_id), Not Null</td>
-      </tr>      
-    </tbody>
-    </table>
-    <h3> Subject Tag Schema </h3> 
-    <table>
-      <thead>
-        <th>Column Name</th>
-        <th>Column Type</th>
-        <th>Constraints</th>
-      </thead>
-      <tbody>
-      <tr>
-        <td>subject_id</td>
-        <td>Integer</td>
-        <td>Primary Key, Auto Increment</td>
-      </tr>
-      <tr>
-        <td>subject_name</td>
-        <td>String</td>
-        <td>Not Null, Unique</td>
-      </tr>
-       
-    </tbody>
-    </table>
-    <h3> Secondary Tag Schema </h3> 
-    <table>
-      <thead>
-        <th>Column Name</th>
-        <th>Column Type</th>
-        <th>Constraints</th>
-      </thead>
-      <tbody>
-      <tr>
-        <td>sec_tag_id</td>
-        <td>Integer</td>
-        <td>Primary Key, Auto Increment</td>
-      </tr>
-      <tr>
-        <td>sec_tag_name</td>
-        <td>String</td>
-        <td>Not Null, Unique</td>
-      </tr>
-       
-    </tbody>
-    </table>
-    <h3> Ticket Table Schema </h3> 
-    <table>
-      <thead>
-        <th>Column Name</th>
-        <th>Column Type</th>
-        <th>Constraints</th>
-      </thead>
-      <tbody>
-      <tr>
-        <td>ticket_id</td>
-        <td>Integer</td>
-        <td>Primary Key, Auto Increment</td>
-      </tr>
-      <tr>
-        <td>user_id</td>
-        <td>Integer</td>
-        <td>Foreign Key(User.user_id)</td>
-      </tr>
-      <tr>
-        <td>title</td>
-        <td>String</td>
-        <td>Not Null, Unique</td>
-      </tr>
-      <tr>
-        <td>description</td>
-        <td>String</td>
-        <td>Not Null</td>
-        </tr>
-         <tr>
-        <td>ticket_status</td>
-        <td>String</td>
-        <td>Not Null, Default=unresolved</td>
-      </tr> 
-      <tr>
-        <td>subject_name</td>
-        <td>String</td>
-        <td>Not Null, Foreign Key(Subject_Tag.subject_name)</td>
-        </tr>
-        <tr>
-        <td>sec_tag_name</td>
-        <td>String</td>
-        <td>Foreign Key(Secondary_Tag.sec_tag_name)</td>
-        </tr>
-         
-    </tbody>
-    </table>
-    <h3> Table likes Schema </h3> 
-    <table>
-      <thead>
-        <th>Column Name</th>
-        <th>Column Type</th>
-        <th>Constraints</th>
-      </thead>
-      <tbody>
-      <tr>
-        <td>ticket_id</td>
-        <td>Integer</td>
-        <td>Foreign Key(Ticket.ticket_id)</td>
-      </tr>
-      <tr>
-        <td>user_id</td>
-        <td>Integer</td>
-        <td>Foreign Key(User.user_id)</td>
-      </tr>
-       
-    </tbody>
-    </table>
-    <h3> Response Table Schema </h3> 
-    <table>
-      <thead>
-        <th>Column Name</th>
-        <th>Column Type</th>
-        <th>Constraints</th>
-      </thead>
-      <tbody>
-      <tr>
-        <td>response_id</td>
-        <td>Integer</td>
-        <td>Primary Key, Auto Increment</td>
-      </tr>
-      <tr>
-        <td>ticket_id</td>
-        <td>Integer</td>
-        <td>Foreign Key(Ticket.ticket_id)</td>
-      </tr>
-      <tr>
-        <td>user_id</td>
-        <td>Integer</td>
-        <td>Foreign Key(User.user_id)</td>
-      </tr>
-      <tr>
-        <td>response</td>
-        <td>String</td>
-        <td>Not Null</td>
-      </tr>
-      <tr>
-        <td>isAnswer</td>
-        <td>Boolean</td>
-        <td>Not Null</td>
-        </tr>
-         
-         
-    </tbody>
+        <thead>
+            <th>Column Name</th>
+            <th>Column Type</th>
+            <th>Constraints</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>user_id</td>
+                <td>Integer</td>
+                <td>Foreign Key(User.user_id)</td>
+            </tr>
+            <tr>
+                <td>status</td>
+                <td>Boolean</td>
+                <td>Not Null, Default=False</td>
+            </tr>
+            <tr>
+                <td>subject_id</td>
+                <td>Integer</td>
+                <td>Foreign Key(Subject_Tag.subject_id), Not Null</td>
+            </tr>
+        </tbody>
     </table>
 
-    <h3> Error Codes </h3> 
+    <h3> Subject Tag Schema </h3>
     <table>
-      <thead>
-        <th>Resource</th>
-        <th>Error Code</th>
-        <th>Message</th>
-      </thead>
-      <tbody>
-      <tr>
-        <td>TAG</td>
-        <td>TAG001</td>
-        <td>Tag_name should be non-empty string</td>
-      </tr>
-      <tr>
-        <td>TAG</td>
-        <td>TAG002</td>
-        <td>Subject_name already exists</td>
-      </tr>
-      <tr>
-        <td>TAG</td>
-        <td>TAG003</td>
-        <td>Secondary tag name already exists</td>
-      </tr>
-      <tr>
-        <td>TAG</td>
-        <td>TAG004</td>
-        <td>Subject tag cannot be deleted</td>
-      </tr>
-      <tr>
-        <td>TAG</td>
-        <td>TAG005</td>
-        <td>The url should contain secondary</td>
-      </tr>
-      <tr>
-        <td>TICKET</td>
-        <td>TICKET001</td>
-        <td>Either user_id or action type is missing</td>
-      </tr>
-      <tr>
-        <td>TICKET</td>
-        <td>TICKET002</td>
-        <td>Ticket need to be resolved before marking as FAQ</td>
-      </tr>
-      <tr>
-        <td>TICKET</td>
-        <td>TICKET003</td>
-        <td>Some data required for creating ticket is missing</td>
-      </tr>
-      <tr>
-        <td>TICKET</td>
-        <td>TICKET004</td>
-        <td>Duplicate title for the subject.You are requested to search for the title</td>
-      </tr>
-      <tr>
-        <td>TICKET</td>
-        <td>TICKET005</td>
-        <td>Secondary tag entered is not available</td>
-      </tr>
-      <td>TICKET</td>
-        <td>TICKET006</td>
-        <td>A student cannot mark the ticket as FAQ</td>
-      </tr>
-      
-    </tbody>
+        <thead>
+            <th>Column Name</th>
+            <th>Column Type</th>
+            <th>Constraints</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>subject_id</td>
+                <td>Integer</td>
+                <td>Primary Key, Auto Increment</td>
+            </tr>
+            <tr>
+                <td>subject_name</td>
+                <td>String</td>
+                <td>Not Null, Unique</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3> Secondary Tag Schema </h3>
+    <table>
+        <thead>
+            <th>Column Name</th>
+            <th>Column Type</th>
+            <th>Constraints</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>sec_tag_id</td>
+                <td>Integer</td>
+                <td>Primary Key, Auto Increment</td>
+            </tr>
+            <tr>
+                <td>sec_tag_name</td>
+                <td>String</td>
+                <td>Not Null, Unique</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3> Ticket Table Schema </h3>
+    <table>
+        <thead>
+            <th>Column Name</th>
+            <th>Column Type</th>
+            <th>Constraints</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ticket_id</td>
+                <td>Integer</td>
+                <td>Primary Key, Auto Increment</td>
+            </tr>
+            <tr>
+                <td>user_id</td>
+                <td>Integer</td>
+                <td>Foreign Key(User.user_id)</td>
+            </tr>
+            <tr>
+                <td>title</td>
+                <td>String</td>
+                <td>Not Null, Unique</td>
+            </tr>
+            <tr>
+                <td>description</td>
+                <td>String</td>
+                <td>Not Null</td>
+            </tr>
+            <tr>
+                <td>ticket_status</td>
+                <td>String</td>
+                <td>Not Null, Default=unresolved</td>
+            </tr>
+            <tr>
+                <td>subject_name</td>
+                <td>String</td>
+                <td>Not Null, Foreign Key(Subject_Tag.subject_name)</td>
+            </tr>
+            <tr>
+                <td>sec_tag_name</td>
+                <td>String</td>
+                <td>Foreign Key(Secondary_Tag.sec_tag_name)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3> Table likes Schema </h3>
+    <table>
+        <thead>
+            <th>Column Name</th>
+            <th>Column Type</th>
+            <th>Constraints</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ticket_id</td>
+                <td>Integer</td>
+                <td>Foreign Key(Ticket.ticket_id)</td>
+            </tr>
+            <tr>
+                <td>user_id</td>
+                <td>Integer</td>
+                <td>Foreign Key(User.user_id)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3> Response Table Schema </h3>
+    <table>
+        <thead>
+            <th>Column Name</th>
+            <th>Column Type</th>
+            <th>Constraints</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>response_id</td>
+                <td>Integer</td>
+                <td>Primary Key, Auto Increment</td>
+            </tr>
+            <tr>
+                <td>ticket_id</td>
+                <td>Integer</td>
+                <td>Foreign Key(Ticket.ticket_id)</td>
+            </tr>
+            <tr>
+                <td>user_id</td>
+                <td>Integer</td>
+                <td>Foreign Key(User.user_id)</td>
+            </tr>
+            <tr>
+                <td>response</td>
+                <td>String</td>
+                <td>Not Null</td>
+            </tr>
+            <tr>
+                <td>isAnswer</td>
+                <td>Boolean</td>
+                <td>Not Null</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3> Error Codes </h3>
+    <table>
+        <thead>
+            <th>Resource</th>
+            <th>Error Code</th>
+            <th>Message</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>LOGIN</td>
+                <td>USER001</td>
+                <td>Email is required and must be a non empty string.</td>
+            </tr>
+            <tr>
+                <td>LOGIN</td>
+                <td>USER002</td>
+                <td>Password is required and must be string with length>4.</td>
+            </tr>
+            <tr>
+                <td>LOGIN</td>
+                <td>USER003</td>
+                <td>Username is required and must be a non empty string.</td>
+            </tr>
+            <tr>
+                <td>LOGIN</td>
+                <td>USER004</td>
+                <td>Role is required and must be a non empty string.</td>
+            </tr>
+            <tr>
+                <td>STAFF</td>
+                <td>STAFF001</td>
+                <td>Tag-id must be provided.</td>
+            </tr>
+            <tr>
+                <td>STAFF</td>
+                <td>STAFF002</td>
+                <td>Valid Subject-id is required.</td>
+            </tr>
+            <tr>
+                <td>TAG</td>
+                <td>TAG001</td>
+                <td>Tag_name should be non-empty string.</td>
+            </tr>
+            <tr>
+                <td>TAG</td>
+                <td>TAG002</td>
+                <td>Subject_name already exists.</td>
+            </tr>
+            <tr>
+                <td>TAG</td>
+                <td>TAG003</td>
+                <td>Secondary tag name already exists.</td>
+            </tr>
+            <tr>
+                <td>TAG</td>
+                <td>TAG004</td>
+                <td>Subject tag cannot be deleted.</td>
+            </tr>
+            <tr>
+                <td>TAG</td>
+                <td>TAG005</td>
+                <td>The url should contain secondary.</td>
+            </tr>
+            <tr>
+                <td>TICKET</td>
+                <td>TICKET001</td>
+                <td>Either user_id or action type is missing.</td>
+            </tr>
+            <tr>
+                <td>TICKET</td>
+                <td>TICKET002</td>
+                <td>Ticket need to be resolved before marking as FAQ.</td>
+            </tr>
+            <tr>
+                <td>TICKET</td>
+                <td>TICKET003</td>
+                <td>Some data required for creating ticket is missing.</td>
+            </tr>
+            <tr>
+                <td>TICKET</td>
+                <td>TICKET004</td>
+                <td>Duplicate title for the subject.You are requested to search for the title.</td>
+            </tr>
+            <tr>
+                <td>TICKET</td>
+                <td>TICKET005</td>
+                <td>Secondary tag entered is not available.</td>
+            </tr>
+            <tr>
+                <td>TICKET</td>
+                <td>TICKET006</td>
+                <td>A student cannot mark the ticket as FAQ.</td>
+            </tr>
+        </tbody>
     </table>
 
   version: 1.0.11
@@ -613,7 +641,7 @@ paths:
       tags:
         - Ticket
       description: "Operation to Create a new ticket."
-      operationId: newUser
+      operationId: newTicket
       parameters:
         - in: path
           name: tag_name
