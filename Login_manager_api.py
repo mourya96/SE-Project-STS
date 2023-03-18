@@ -45,8 +45,8 @@ class Login_api(Resource):
         else:
             obj.password = form.get("password")
         if form.get('role') is None or type(form.get('role')) != str:
-            raise LogicError(status_code=400, error_code="USER003",
-                             error_msg="Role is required and must be string.")
+            raise LogicError(status_code=400, error_code="USER004",
+                             error_msg="Role is required and must be a non empty string.")
         else:
             obj.role = form.get("role", None)
 

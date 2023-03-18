@@ -75,7 +75,7 @@ class Ticket_api(Resource):
         # Changes in database based on action variable from form
         if form.get("action") == 'faq':
             if user.role=='student':
-                raise LogicError(status_code=400, error_code="TICKET006",
+                raise LogicError(status_code=400, error_code="TICKET005",
                                  error_msg="A student cannot mark the ticket as FAQ")
             if ticket_obj.ticket_status == "resolved":
                 ticket_obj.isFAQ = True
@@ -125,13 +125,12 @@ class Ticket_api(Resource):
         #Checking for duplicate titles
         for ticket in tickets:
             if ticket.title.lower()==title.lower():
-                raise LogicError(status_code=400, error_code="TICKET004",
-                             error_msg="Duplicate title for the subject.You are requested to search for the title")
+                raise DataError(status_code=409)
 
         # Checking if secondary tag is present in Secondary Tag class
         sec_obj = Secondary_Tag.query.filter_by(sec_tag_name=sec).first()
         if sec_obj is None:
-            raise LogicError(status_code=400, error_code="TICKET005",
+            raise LogicError(status_code=400, error_code="TICKET004",
                              error_msg="Secondary tag entered is not available")
 
         # Creating ticket obj and committing to database
