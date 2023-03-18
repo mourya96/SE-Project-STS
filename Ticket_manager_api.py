@@ -19,6 +19,43 @@ class Ticket_api(Resource):
                      }
 
     @marshal_with(ticket_output)
+    def get(self, subject_name: str):
+
+        # extracts all the query parameters from the endpoint and converts it into a dictionary
+        params = request.args.to_dict()
+        filter_dict = {'subject_name': subject_name}
+        keyword = ""
+        limit = 0
+        # using the params dictionary we add keys and values to the filter_dict dictionary
+        # and initialize the values
+        for key in params.keys():
+            if key == 'FAQ':
+                if params[key].lower() == 'true':
+                    filter_dict['isFAQ'] = bool(1)
+                else:
+                    filter_dict['isFAQ'] = bool(0)
+            elif key == 'limit':
+                limit = int(params[key])
+            elif key == 'ResolvedStatus':
+                if params[key].lower() == 'false':
+                    filter_dict['ticket_status'] = 'unresolved'
+                else:
+                    filter_dict['ticket_status'] = 'resolved'
+            elif key == 'search':
+                keyword = params[key]
+
+        # Used Inner join for two queries
+        if limit > 0:
+            subq = Ticket.query.filter_by(**filter_dict).limit(limit).subquery()
+            que = Ticket.query.filter(Ticket.title.contains(keyword))\
+                               .join(subq, Ticket.ticket_id == subq.c.ticket_id).all()
+        else:
+            subq = Ticket.query.filter_by(**filter_dict).subquery()
+            que = Ticket.query.filter(Ticket.title.contains(keyword))\
+                               .join(subq, Ticket.ticket_id == subq.c.ticket_id).all()
+        return que, 200
+    
+    @marshal_with(ticket_output)
     def put(self, ticket_id: int):
         '''Modifies the ticket details'''
         ticket_obj = Ticket.query.filter_by(ticket_id=ticket_id).first()
