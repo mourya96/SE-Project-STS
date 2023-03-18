@@ -28,6 +28,10 @@ class Ticket_api(Resource):
         limit = 0
         # using the params dictionary we add keys and values to the filter_dict dictionary
         # and initialize the values
+        obj = Subject_Tag.query.filter_by(subject_name = subject_name).first()
+        if obj is None:
+            raise DataError(status_code=404, error_code="TICKET006",
+                            error_msg="invalid subject")
         for key in params.keys():
             if key == 'FAQ':
                 if params[key].lower() == 'true':
