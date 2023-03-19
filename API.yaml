@@ -454,19 +454,16 @@ paths:
               properties:
                 username:
                   type: string
-                  example: staffav
+                  example: user1
                 email:
                   type: string
-                  example: staff11@gmail.com
+                  example: user1@gmail.com
                 password:
                   type: string
                   example: abcd3
                 role:
                   type: string
-                  example: staff
-                subject_id:
-                  type: integer
-                  example: 1
+                  example: student
       responses:
         "201":
           description: Request Successful
