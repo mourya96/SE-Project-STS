@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource, fields, marshal_with
 
 from custom_error import DataError, LogicError
-from model import Secondary_Tag, Subject_Tag, Table_likes, Ticket, db,User
+from model import Secondary_Tag, Subject_Tag, Table_likes, Ticket, db, User
 
 
 class Ticket_api(Resource):
@@ -28,10 +28,10 @@ class Ticket_api(Resource):
         limit = 0
         # using the params dictionary we add keys and values to the filter_dict dictionary
         # and initialize the values
-        obj = Subject_Tag.query.filter_by(subject_name = subject_name).first()
+        obj = Subject_Tag.query.filter_by(subject_name=subject_name).first()
         if obj is None:
             raise LogicError(status_code=404, error_code="TICKET006",
-                            error_msg="invalid subject")
+                             error_msg="invalid subject")
         for key in params.keys():
             if key == 'FAQ':
                 if params[key].lower() == 'true':
@@ -52,15 +52,16 @@ class Ticket_api(Resource):
 
         # Used Inner join for two queries
         if limit > 0:
-            subq = Ticket.query.filter_by(**filter_dict).limit(limit).subquery()
+            subq = Ticket.query.filter_by(
+                **filter_dict).limit(limit).subquery()
             que = Ticket.query.filter(Ticket.title.contains(keyword))\
-                               .join(subq, Ticket.ticket_id == subq.c.ticket_id).all()
+                .join(subq, Ticket.ticket_id == subq.c.ticket_id).all()
         else:
             subq = Ticket.query.filter_by(**filter_dict).subquery()
             que = Ticket.query.filter(Ticket.title.contains(keyword))\
-                               .join(subq, Ticket.ticket_id == subq.c.ticket_id).all()
+                .join(subq, Ticket.ticket_id == subq.c.ticket_id).all()
         return que, 200
-    
+
     @marshal_with(ticket_output)
     def put(self, ticket_id: int):
         '''Modifies the ticket details'''
@@ -77,10 +78,10 @@ class Ticket_api(Resource):
 
         user_id = form.get("user_id")
 
-        user= User.query.filter_by(user_id=user_id).first()
+        user = User.query.filter_by(user_id=user_id).first()
         # Changes in database based on action variable from form
         if form.get("action") == 'faq':
-            if user.role=='student':
+            if user.role == 'student':
                 raise LogicError(status_code=400, error_code="TICKET005",
                                  error_msg="A student cannot mark the ticket as FAQ")
             if ticket_obj.ticket_status == "resolved":
@@ -88,7 +89,6 @@ class Ticket_api(Resource):
             elif ticket_obj.ticket_status == "unresolved":
                 raise LogicError(status_code=400, error_code="TICKET002",
                                  error_msg="Ticket need to be resolved before marking as FAQ")
-            
 
         elif form.get("action") == 'like':
             for like in ticket_obj.likes:
@@ -125,12 +125,12 @@ class Ticket_api(Resource):
         if None in form_data:
             raise LogicError(status_code=400, error_code="TICKET003",
                              error_msg="Some data required for creating ticket is missing")
-        
-        tickets= Ticket.query.filter_by(subject_name=subject_name).all()
-        
-        #Checking for duplicate titles
+
+        tickets = Ticket.query.filter_by(subject_name=subject_name).all()
+
+        # Checking for duplicate titles
         for ticket in tickets:
-            if ticket.title.lower()==title.lower():
+            if ticket.title.lower() == title.lower():
                 raise DataError(status_code=409)
 
         # Checking if secondary tag is present in Secondary Tag class

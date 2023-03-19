@@ -5,7 +5,8 @@ info:
     <div>
         This RESTful API, database models has been created using Flask-RESTful and flask-SQLAlchemy.
     </div>
-    <h3> User Table Schema </h3> <table>
+    <h3> User Table Schema </h3>
+    <table>
         <thead>
             <th>Column Name</th>
             <th>Column Type</th>
@@ -39,7 +40,8 @@ info:
             </tr>
         </tbody>
     </table>
-    <h3> Staff Table Schema </h3> <table>
+    <h3> Staff Table Schema </h3>
+    <table>
         <thead>
             <th>Column Name</th>
             <th>Column Type</th>
@@ -63,7 +65,8 @@ info:
             </tr>
         </tbody>
     </table>
-    <h3> Subject Tag Schema </h3> <table>
+    <h3> Subject Tag Schema </h3>
+    <table>
         <thead>
             <th>Column Name</th>
             <th>Column Type</th>
@@ -82,7 +85,8 @@ info:
             </tr>
         </tbody>
     </table>
-    <h3> Secondary Tag Schema </h3> <table>
+    <h3> Secondary Tag Schema </h3>
+    <table>
         <thead>
             <th>Column Name</th>
             <th>Column Type</th>
@@ -101,7 +105,8 @@ info:
             </tr>
         </tbody>
     </table>
-    <h3> Ticket Table Schema </h3> <table>
+    <h3> Ticket Table Schema </h3>
+    <table>
         <thead>
             <th>Column Name</th>
             <th>Column Type</th>
@@ -145,7 +150,8 @@ info:
             </tr>
         </tbody>
     </table>
-    <h3> Table likes Schema </h3> <table>
+    <h3> Table likes Schema </h3>
+    <table>
         <thead>
             <th>Column Name</th>
             <th>Column Type</th>
@@ -164,7 +170,8 @@ info:
             </tr>
         </tbody>
     </table>
-    <h3> Response Table Schema </h3> <table>
+    <h3> Response Table Schema </h3>
+    <table>
         <thead>
             <th>Column Name</th>
             <th>Column Type</th>
@@ -198,7 +205,8 @@ info:
             </tr>
         </tbody>
     </table>
-    <h3> Error Codes </h3> <table>
+    <h3> Error Codes </h3>
+    <table>
         <thead>
             <th>Resource</th>
             <th>Error Code</th>
