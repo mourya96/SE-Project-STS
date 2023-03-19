@@ -36,6 +36,9 @@ class Role_api(Resource):
 
         form = request.get_json()
         obj = Staff.query.filter_by(user_id=user_id).first()
+        # Checking whether Staff record is present
+        if not obj:
+            raise DataError(status_code=404)
 
         # Input data checking
         if form.get('subject_id') is None and form.get('status') is None:
