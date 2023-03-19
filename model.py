@@ -60,9 +60,9 @@ class Ticket(db.Model):
 class Table_likes(db.Model):
     __tablename__ = 'Table_likes'
     ticket_id = db.Column(db.Integer, db.ForeignKey("Ticket.ticket_id"),
-                          primary_key=True)
+                          primary_key=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("User.user_id"),
-                        primary_key=True)
+                        primary_key=True, nullable=False)
 
 
 '''
@@ -78,7 +78,7 @@ class Tag_relation(db.Model):
 class Response(db.Model):
     __tablename__ = 'Response'
     response_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    ticket_id = db.Column(db.Integer, db.ForeignKey("Ticket.ticket_id"))
-    user_id = db.Column(db.Integer, db.ForeignKey("User.user_id"))
+    ticket_id = db.Column(db.Integer, db.ForeignKey("Ticket.ticket_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("User.user_id"), nullable=False)
     response = db.Column(db.String, nullable=False)
-    isAnswer = db.Column(db.Boolean, nullable=False)
+    isAnswer = db.Column(db.Boolean, nullable=False, default=False)
