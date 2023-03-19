@@ -9,6 +9,7 @@ class Responses_api(Resource):
 
     response_output = {'ticket_id': fields.Integer, 'title': fields.String,
                        'description': fields.String, 'isFAQ': fields.Boolean,
+                       'ticket_status': fields.String, 'sec_name': fields.String,
                        'likes': fields.Integer(attribute=lambda x: len(x.likes)), 
                        'response_list': fields.Raw(attribute=lambda x: 
                                                         [{
@@ -76,15 +77,15 @@ class Responses_api(Resource):
                
             que = Ticket.query.filter_by(ticket_id = ticket_id).first()
             if que is None:
-                raise LogicError(status_code=404, error_code='RESPONSE001',
+                raise LogicError(status_code=400, error_code='RESPONSE001',
                                 error_msg="Invalid response id")
             ticket_status = form.get('ticket_status')
             if ticket_status is None:
                 raise LogicError(status_code=400, error_code='RESPONSE005',
-                                 error_msg= "'ticket_status field is missing or invalid format")
+                                 error_msg= "'ticket_status' field is missing or invalid format")
             # checking if ticket status is either "unresolved" or "resolved"
             elif (ticket_status.lower() != "unresolved") == (ticket_status.lower() != "resolved"):
-                raise LogicError(status_code=400, error_code='RESPONSE005', 
+                raise LogicError(status_code=400, error_code='RESPONSE006', 
                                 error_msg='Invalid value for ticket_status, it should be either \'resolved\' or \'unresolved\'')
 
             obj.isAnswer = form.get('isAnswer')

@@ -45,6 +45,8 @@ class Ticket_api(Resource):
                     filter_dict['ticket_status'] = 'unresolved'
                 else:
                     filter_dict['ticket_status'] = 'resolved'
+            elif key == 'TagName':
+                filter_dict['sec_name'] = params[key]
             elif key == 'search':
                 keyword = params[key]
 
