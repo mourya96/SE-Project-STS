@@ -333,6 +333,7 @@ info:
   version: 1.0.11
 servers:
   - url: http://127.0.0.1:5500
+  - url: http://teamfmm.pythonanywhere.com
 tags:
   - name: login
     description: Login Manager API
