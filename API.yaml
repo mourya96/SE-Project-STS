@@ -36,7 +36,7 @@ info:
             <tr>
                 <td>role</td>
                 <td>String</td>
-                <td>Not Null 0</td>
+                <td>Not Null</td>
             </tr>
         </tbody>
     </table>
@@ -161,12 +161,12 @@ info:
             <tr>
                 <td>ticket_id</td>
                 <td>Integer</td>
-                <td>Foreign Key(Ticket.ticket_id)</td>
+                <td>Primary Key, Foreign Key(Ticket.ticket_id)</td>
             </tr>
             <tr>
                 <td>user_id</td>
                 <td>Integer</td>
-                <td>Foreign Key(User.user_id)</td>
+                <td>Primary Key, Foreign Key(User.user_id)</td>
             </tr>
         </tbody>
     </table>
