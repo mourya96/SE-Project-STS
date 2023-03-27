@@ -58,7 +58,7 @@ class Login_api(Resource):
 
         obj = User.query.filter_by(email=email).first()
 
-        if obj.role=='staff':
+        if obj.role == 'staff':
             obj = Staff.query.filter_by(user_id=obj.user_id).first()
         # Checking whether user record is present
         if not obj:
