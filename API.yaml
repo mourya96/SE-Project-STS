@@ -398,7 +398,7 @@ paths:
                   type: string
                   example: staff
       responses:
-        "200":
+        "202":
           description: Request Successful
           content:
             application/json:
@@ -548,7 +548,7 @@ paths:
                   type: boolean
                   example: true
       responses:
-        "200":
+        "202":
           description: Request Successful
           content:
             application/json:
@@ -871,7 +871,7 @@ paths:
                   type: string
                   example: MLT
       responses:
-        "200":
+        "202":
           description: Request Successful
           content:
             application/json:
