@@ -1,13 +1,18 @@
 import json
+from model import db, Subject_Tag
 
 
 def test_subject_tag(client):
+    # Make a GET request to Tag API
     response = client.get(f'/api/tag/subject/1')
+    # Check status of response
     assert response.status_code == 200
 
 
 def test_secondary_tag(client):
+    # Make a GET request to Tag API
     response = client.get(f'/api/tag/secondary/1')
+    # Check status of response
     assert response.status_code == 200
 
 
@@ -23,7 +28,9 @@ def test_create_subject_tag(client):
     # Check response body for correct tag-name
     data = json.loads(response.data)
     assert data['subject_name'] == 'MAD-1'
-    client.delete(f'/api/tag/subject/{data["subject_id"]}')
+    db.session.delete(Subject_Tag.query.filter_by(
+        subject_name=data['subject_name']).first())
+    db.session.commit()
 
 
 def test_create_secondary_tag(client):
@@ -62,7 +69,9 @@ def test_edit_subject_tag(client):
 
     data = json.loads(response.data)
     assert data['subject_name'] == 'mad-2'
-    client.delete(f'/api/tag/subject/{data["sec_id"]}')
+    db.session.delete(Subject_Tag.query.filter_by(
+        subject_name=data['subject_name']).first())
+    db.session.commit()
 
 
 def test_edit_secondary_tag(client):
