@@ -18,7 +18,7 @@ def test_get_tickets(client):
         assert obj['subject_name'] == "subject_1"
         assert obj["sec_name"] == params['TagName']
         assert params['search'].lower() in obj['title'].lower()
-    
+
 
 def test_get_tickets_error(client):
     url = "http://127.0.0.1:5500/api/subject/NotASubject"

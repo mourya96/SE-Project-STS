@@ -1,5 +1,6 @@
 import json
-from model import db, Subject_Tag
+
+from model import Subject_Tag, db
 
 
 def test_subject_tag(client):
@@ -28,6 +29,7 @@ def test_create_subject_tag(client):
     # Check response body for correct tag-name
     data = json.loads(response.data)
     assert data['subject_name'] == 'MAD-1'
+    # Remove the Test data from DB
     db.session.delete(Subject_Tag.query.filter_by(
         subject_name=data['subject_name']).first())
     db.session.commit()
@@ -45,6 +47,7 @@ def test_create_secondary_tag(client):
     # Check response body for correct tag-name
     data = json.loads(response.data)
     assert data['sec_name'] == 'Quiz-1'
+    # Remove the Test data from DB
     client.delete(f'/api/tag/secondary/{data["sec_id"]}')
 
 
@@ -69,6 +72,7 @@ def test_edit_subject_tag(client):
 
     data = json.loads(response.data)
     assert data['subject_name'] == 'mad-2'
+    # Remove the Test data from DB
     db.session.delete(Subject_Tag.query.filter_by(
         subject_name=data['subject_name']).first())
     db.session.commit()
@@ -95,4 +99,5 @@ def test_edit_secondary_tag(client):
 
     data = json.loads(response.data)
     assert data['sec_name'] == 'quiz-2'
+    # Remove the Test data from DB
     client.delete(f'/api/tag/secondary/{data["sec_id"]}')
