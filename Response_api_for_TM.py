@@ -3,6 +3,7 @@ from flask_restful import Resource, fields, marshal_with
 
 from custom_error import LogicError
 from model import Response, Ticket, db
+import json
 
 
 class Responses_api(Resource):
@@ -67,15 +68,16 @@ class Responses_api(Resource):
             raise LogicError(status_code=404, error_code="RESPONSE002",
                              error_msg="Invalid response id")
         else:
-            form = request.get_json()
+            form = json.loads(request.get_json())
+            print(form)
             if form.get("isAnswer") is None:
                 raise LogicError(status_code=400, error_code="RESPONSE004",
                                  error_msg="'isAnswer' field is missing or invalid format")
 
             que = Ticket.query.filter_by(ticket_id=ticket_id).first()
             if que is None:
-                raise LogicError(status_code=400, error_code='RESPONSE001',
-                                 error_msg="Invalid response id")
+                raise LogicError(status_code=404, error_code='RESPONSE001',
+                                 error_msg="Invalid ticket id")
             ticket_status = form.get('ticket_status')
             if ticket_status is None:
                 raise LogicError(status_code=400, error_code='RESPONSE005',
