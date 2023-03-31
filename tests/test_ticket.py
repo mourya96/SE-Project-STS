@@ -26,6 +26,8 @@ def test_get_tickets_error(client):
     assert res.status_code == 404
     json_data = json.loads(res.data)
     assert json_data['error_code'] == 'TICKET006'
+
+
 def test_create_ticket(client):
     # Set up test data
     new_ticket = {
@@ -56,7 +58,7 @@ def test_mark_resolved_ticket_as_faq(client):
     }
 
     ticket_id = 1
-    
+
     response = client.put(
         f'/api/subject/ticket/{ticket_id}', json=action_detail)
     ticket_obj = json.loads(response.data)
