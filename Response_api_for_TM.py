@@ -34,6 +34,7 @@ class Responses_api(Resource):
             raise LogicError(status_code=404, error_code="RESPONSE001",
                              error_msg="Invalid ticket id")
 
+    @jwt_required()
     @marshal_with(response_output)
     def post(self, ticket_id: int):
 
@@ -60,6 +61,7 @@ class Responses_api(Resource):
             raise LogicError(status_code=404, error_code="RESPONSE001",
                              error_msg="Invalid ticket id")
 
+    @jwt_required()
     @marshal_with(response_output)
     def put(self, ticket_id: int, response_id: int):
 

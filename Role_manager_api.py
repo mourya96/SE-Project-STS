@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource, fields, marshal_with
-
+from flask_jwt_extended import jwt_required
 from custom_error import DataError, LogicError
 from model import Staff, Subject_Tag, db
 
@@ -13,6 +13,7 @@ class Role_api(Resource):
               "approved": fields.Boolean(attribute='status'),
               "subject_id": fields.Integer}
 
+    @jwt_required()
     @marshal_with(output)
     def get(self):
         '''Returns a list of Staff details'''
@@ -30,6 +31,7 @@ class Role_api(Resource):
             raise DataError(status_code=404)
         return obj, 200
 
+    @jwt_required()
     @marshal_with(output)
     def put(self, user_id: int):
         '''Modifies the subject_id or status for a Staff'''
@@ -58,6 +60,7 @@ class Role_api(Resource):
         db.session.commit()
         return obj, 202
 
+    @jwt_required()
     def delete(self, user_id: int):
         '''Removes a Staff details'''
 

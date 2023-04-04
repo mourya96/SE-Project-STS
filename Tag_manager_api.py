@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource, fields, marshal_with
-
+from flask_jwt_extended import jwt_required
 from custom_error import DataError, LogicError
 from model import Secondary_Tag, Subject_Tag, db
 
@@ -12,6 +12,7 @@ class Tag_api(Resource):
                   "sec_id": fields.Integer(attribute='sec_tag_id'),
                   "sec_name": fields.String(attribute='sec_tag_name')}
 
+    @jwt_required()
     @marshal_with(tag_output)
     def get(self, tag_type: str, tag_id: int = None):
         '''Getting the tag details'''
@@ -37,6 +38,7 @@ class Tag_api(Resource):
 
         return tags, 200
 
+    @jwt_required()
     @marshal_with(tag_output)
     def put(self, tag_type: str, tag_id: int):
         '''Modifies the tag details'''
@@ -83,6 +85,7 @@ class Tag_api(Resource):
         db.session.commit()
         return tag_obj, 202
 
+    @jwt_required()
     @marshal_with(tag_output)
     def post(self, tag_type: str):
         '''Creates a new tag based on tag type'''
@@ -121,6 +124,7 @@ class Tag_api(Resource):
             db.session.commit()
             return tag_obj, 201
 
+    @jwt_required()
     def delete(self, tag_type: str, tag_id: int):
         '''Deletes the tag-power given only to admin'''
         if tag_type == 'subject':
