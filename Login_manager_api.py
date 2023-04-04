@@ -14,7 +14,7 @@ class Login_api(Resource):
               "email": fields.String, "password": fields.String,
               "role": fields.String, "approved": fields.Boolean(attribute='status')}
 
-    @jwt_required
+    @jwt_required()
     @marshal_with(output)
     def get(self, email: str):
         '''Returns the User details for the given email'''
