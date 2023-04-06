@@ -1,0 +1,18 @@
+hr {
+    border-top: solid #000000;
+    border-width: 5px;
+}
+
+.dark-mode hr {
+    border-width: 5px;
+    border-color: aqua;
+}
+
+.dark-mode {
+    background-color: rgba(22, 38, 108, 0.9);
+    color: rgba(229, 45, 79, 0.962);
+}
+
+body {
+    overflow: hidden;
+}

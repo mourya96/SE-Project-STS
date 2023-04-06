@@ -1,6 +1,8 @@
 const student_dashboard = {
     template: `
     <div>
+        <link rel="stylesheet" href="../static/dashboard.css">
+        
         <h1 class="text-center">Student Dashboard</h1>
         <div class="position-relative" style="margin-left: 3%; margin-right: 3%;">
             <h3 class=" ms-3">Welcome {{username}}</h3>
@@ -38,24 +40,22 @@ const student_dashboard = {
     },
     methods: {
         logout() {
-            fetch('/logout')
-                .then(res => {
-                    if (res.ok) {
-                        alert("Logout Successfully")
-                        window.localStorage.clear()
-                    } else {
-                        alert("Error occured during logout")
-                    }
-                })
+            alert("Logout Successfully")
+            localStorage.clear()
         }
     },
     beforeMount() {
-        this.subjects = {
-            'MLT': ['faq.title1', 'faq.title2', 'faq.title3'],
-            'BDM': ['faq.title1', 'faq.title2', 'faq.title3', 'faq.title4'],
-            'BA': ['faq.title1', 'faq.title2'],
-            'PDSA': ['faq.title1',],
-        }
+        fetch('/api/tag/subject')
+            .then(res => res.json())
+            .then(data => {
+                const subject_names = data.map(x => x.subject_name)
+                // subject_names=['MLT', 'BDM', 'BA'] (output format)
+                for (const subject of subject_names) {
+                    fetch(`/api/subject/${subject}?FAQ=True&limit=5`)
+                        .then(res => res.json())
+                        .then(data => this.subjects[subject] = data.map(x => x.title))
+                }
+            }).catch(err => console.log(err))
         this.ready = true
     }
 }
