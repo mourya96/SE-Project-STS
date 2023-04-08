@@ -12,7 +12,6 @@ class Tag_api(Resource):
                   "sec_id": fields.Integer(attribute='sec_tag_id'),
                   "sec_name": fields.String(attribute='sec_tag_name')}
 
-    @jwt_required()
     @marshal_with(tag_output)
     def get(self, tag_type: str, tag_id: int = None):
         '''Getting the tag details'''

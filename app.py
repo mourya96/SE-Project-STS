@@ -42,7 +42,7 @@ def login():
     form = request.get_json()
     username = form.get("username")
     password = form.get("password")
-    user = User.query.filter_by(username=form.get('username')).first()
+    user = User.query.filter_by(username=username).first()
     if not user:
         raise DataError(status_code=404)
     if check_password_hash(pwhash=user.password, password=password):
