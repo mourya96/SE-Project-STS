@@ -1,6 +1,8 @@
 from flask import request
 from flask_restful import Resource, fields, marshal_with
-
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token, jwt_required
+import datetime
 from custom_error import DataError, LogicError
 from model import Staff, Subject_Tag, User, db
 
@@ -12,6 +14,7 @@ class Login_api(Resource):
               "email": fields.String, "password": fields.String,
               "role": fields.String, "approved": fields.Boolean(attribute='status')}
 
+    @jwt_required()
     @marshal_with(output)
     def get(self, email: str):
         '''Returns the User details for the given email'''
@@ -28,6 +31,7 @@ class Login_api(Resource):
 
         return obj, 200
 
+    @jwt_required
     @marshal_with(output)
     def put(self, email: str):
         '''Modifies the User details for the given email'''
@@ -68,7 +72,6 @@ class Login_api(Resource):
         db.session.commit()
         return '', 200
 
-    @marshal_with(output)
     def post(self):
         '''Creates a new User details'''
 
@@ -89,7 +92,7 @@ class Login_api(Resource):
                         subject_id=form.get('subject_id'))
         else:
             obj = User(username=form.get('username'), email=form.get("email"),
-                       password=form.get("password"), role=form.get("role"))
+                       password=generate_password_hash(form.get("password")), role=form.get("role"))
 
         # Input data checking
         if obj.email is None or type(obj.email) != str or len(obj.email) == 0:
@@ -107,4 +110,7 @@ class Login_api(Resource):
 
         db.session.add(obj)
         db.session.commit()
-        return obj, 201
+        expire_time = datetime.timedelta(days=5)
+        access_token = create_access_token(
+            identity=form.get('username'), expires_delta=expire_time)
+        return {'access_token': access_token, "username": obj.username, "password": obj.password, "role": obj.role}, 200

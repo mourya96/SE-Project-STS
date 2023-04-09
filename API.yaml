@@ -1183,8 +1183,15 @@ paths:
                     type: string
         "500":
           description: Internal server error
+security:
+  - bearerAuth: []
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     User:
       type: object

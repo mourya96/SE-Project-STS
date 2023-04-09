@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource, fields, marshal_with
-
+from flask_jwt_extended import jwt_required
 from custom_error import LogicError
 from model import Response, Ticket, db
 import json
@@ -22,6 +22,7 @@ class Responses_api(Resource):
                                                     for r in x.response_list
                                                     ])}
 
+    @jwt_required()
     @marshal_with(response_output)
     def get(self, ticket_id: int):
 
@@ -33,6 +34,7 @@ class Responses_api(Resource):
             raise LogicError(status_code=404, error_code="RESPONSE001",
                              error_msg="Invalid ticket id")
 
+    @jwt_required()
     @marshal_with(response_output)
     def post(self, ticket_id: int):
 
@@ -59,6 +61,7 @@ class Responses_api(Resource):
             raise LogicError(status_code=404, error_code="RESPONSE001",
                              error_msg="Invalid ticket id")
 
+    @jwt_required()
     @marshal_with(response_output)
     def put(self, ticket_id: int, response_id: int):
 

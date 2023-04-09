@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource, fields, marshal_with
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from custom_error import DataError, LogicError
 from model import Secondary_Tag, Subject_Tag, Table_likes, Ticket, db, User
 
@@ -18,6 +18,7 @@ class Ticket_api(Resource):
                      "likes": fields.Integer(attribute=lambda x: len(x.likes))
                      }
 
+    @jwt_required()
     @marshal_with(ticket_output)
     def get(self, subject_name: str):
 
@@ -62,6 +63,7 @@ class Ticket_api(Resource):
                 .join(subq, Ticket.ticket_id == subq.c.ticket_id).all()
         return que, 200
 
+    @jwt_required()
     @marshal_with(ticket_output)
     def put(self, ticket_id: int):
         '''Modifies the ticket details'''
@@ -104,6 +106,7 @@ class Ticket_api(Resource):
         db.session.commit()
         return ticket_obj, 200
 
+    @jwt_required()
     @marshal_with(ticket_output)
     def post(self, subject_name: str):
         '''Creates a new ticket for a subject'''
@@ -118,7 +121,9 @@ class Ticket_api(Resource):
         title = form.get("title")
         desc = form.get("description")
         sec = form.get("secondary_tag")
-        user_id = form.get("user_id")
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+        user_id = user.user_id
         form_data = [title, desc, sec, user_id]
 
         # Checking if all the form data is filled up
@@ -146,6 +151,7 @@ class Ticket_api(Resource):
         db.session.commit()
         return ticket_obj, 201
 
+    @jwt_required()
     def delete(self, ticket_id: int):
         '''Deletes the ticket-power given only to admin'''
         ticket_obj = Ticket.query.filter_by(ticket_id=ticket_id).first()
