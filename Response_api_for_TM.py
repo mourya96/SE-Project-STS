@@ -1,9 +1,11 @@
+import json
+
 from flask import request
-from flask_restful import Resource, fields, marshal_with
 from flask_jwt_extended import jwt_required
+from flask_restful import Resource, fields, marshal_with
+
 from custom_error import LogicError
 from model import Response, Ticket, db
-import json
 
 
 class Responses_api(Resource):

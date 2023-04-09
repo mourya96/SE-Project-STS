@@ -1,8 +1,10 @@
-from flask import request
-from flask_restful import Resource, fields, marshal_with
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token, jwt_required
 import datetime
+
+from flask import request
+from flask_jwt_extended import create_access_token, jwt_required
+from flask_restful import Resource, fields, marshal_with
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from custom_error import DataError, LogicError
 from model import Staff, Subject_Tag, User, db
 

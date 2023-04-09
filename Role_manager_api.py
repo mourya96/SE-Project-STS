@@ -1,6 +1,7 @@
 from flask import request
-from flask_restful import Resource, fields, marshal_with
 from flask_jwt_extended import jwt_required
+from flask_restful import Resource, fields, marshal_with
+
 from custom_error import DataError, LogicError
 from model import Staff, Subject_Tag, db
 

@@ -78,7 +78,9 @@ class Tag_relation(db.Model):
 class Response(db.Model):
     __tablename__ = 'Response'
     response_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    ticket_id = db.Column(db.Integer, db.ForeignKey("Ticket.ticket_id"), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("User.user_id"), nullable=False)
+    ticket_id = db.Column(db.Integer, db.ForeignKey(
+        "Ticket.ticket_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "User.user_id"), nullable=False)
     response = db.Column(db.String, nullable=False)
     isAnswer = db.Column(db.Boolean, nullable=False, default=False)

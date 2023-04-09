@@ -1,8 +1,9 @@
 from flask import request
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_restful import Resource, fields, marshal_with
-from flask_jwt_extended import jwt_required, get_jwt_identity
+
 from custom_error import DataError, LogicError
-from model import Secondary_Tag, Subject_Tag, Table_likes, Ticket, db, User
+from model import Secondary_Tag, Subject_Tag, Table_likes, Ticket, User, db
 
 
 class Ticket_api(Resource):

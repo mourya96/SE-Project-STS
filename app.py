@@ -1,17 +1,19 @@
+import datetime
 import os
-from flask_jwt_extended import JWTManager, create_access_token
+
 from flask import Flask, request
+from flask_cors import CORS
+from flask_jwt_extended import JWTManager, create_access_token
 from flask_restful import Api
 from werkzeug.security import check_password_hash
-import datetime
-from model import User, db
+
 from custom_error import *
 from Login_manager_api import Login_api
+from model import User, db
+from Response_api_for_TM import Responses_api
 from Role_manager_api import Role_api
 from Tag_manager_api import Tag_api
 from Ticket_manager_api import Ticket_api
-from Response_api_for_TM import Responses_api
-from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd() + \
