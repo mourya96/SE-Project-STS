@@ -115,4 +115,4 @@ class Login_api(Resource):
         expire_time = datetime.timedelta(days=5)
         access_token = create_access_token(
             identity=form.get('username'), expires_delta=expire_time)
-        return {'access_token': access_token, "username": obj.username, "password": obj.password, "role": obj.role}, 200
+        return {'access_token': access_token, "username": obj.username, "password": obj.password, "role": obj.role, "user_id": obj.user_id}, 200
