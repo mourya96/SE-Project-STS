@@ -49,7 +49,7 @@ def login():
         expire_time = datetime.timedelta(days=1)
         access_token = create_access_token(
             identity=username, expires_delta=expire_time)
-        return {'access_token': access_token}, 200
+        return {'access_token': access_token, 'role': user.role}, 200
     else:
         raise LogicError(status_code=400, error_code="USER005",
                          error_msg="Either username or password is incorrect")

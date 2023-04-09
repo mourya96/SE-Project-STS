@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource, fields, marshal_with
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from custom_error import DataError, LogicError
 from model import Secondary_Tag, Subject_Tag, Table_likes, Ticket, db, User
 
@@ -121,7 +121,9 @@ class Ticket_api(Resource):
         title = form.get("title")
         desc = form.get("description")
         sec = form.get("secondary_tag")
-        user_id = form.get("user_id")
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(username=current_user).first()
+        user_id = user.user_id
         form_data = [title, desc, sec, user_id]
 
         # Checking if all the form data is filled up
