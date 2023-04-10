@@ -15,7 +15,7 @@ class Responses_api(Resource):
                        'description': fields.String, 'isFAQ': fields.Boolean,
                        'user_id': fields.Integer,
                        'ticket_status': fields.String, 'sec_name': fields.String,
-                       'likes': fields.Integer(attribute=lambda x: len(x.likes)),
+                       'likes': fields.Raw(attribute=lambda x: [i.user_id for i in x.likes]),
                        'response_list': fields.Raw(attribute=lambda x:
                                                    [{
                                                        'response_id': r.response_id,
