@@ -1315,6 +1315,9 @@ components:
         ticket_status:
           type: string
           example: unresolved
+        subject_name:
+          type: string
+          example: MLT
         sec_name:
           type: string
           example: week-1

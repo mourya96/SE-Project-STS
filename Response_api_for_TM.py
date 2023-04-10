@@ -13,8 +13,8 @@ class Responses_api(Resource):
 
     response_output = {'ticket_id': fields.Integer, 'title': fields.String,
                        'description': fields.String, 'isFAQ': fields.Boolean,
-                       'user_id': fields.Integer,
-                       'ticket_status': fields.String, 'sec_name': fields.String,
+                       'user_id': fields.Integer, 'ticket_status': fields.String,
+                       'subject_name': fields.String, 'sec_name': fields.String,
                        'likes': fields.Raw(attribute=lambda x: [i.user_id for i in x.likes]),
                        'response_list': fields.Raw(attribute=lambda x:
                                                    [{
