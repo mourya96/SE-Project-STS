@@ -74,7 +74,7 @@ class Responses_api(Resource):
             raise LogicError(status_code=404, error_code="RESPONSE002",
                              error_msg="Invalid response id")
         else:
-            form = json.loads(request.get_json())
+            form = request.get_json()
             print(form)
             if form.get("isAnswer") is None:
                 raise LogicError(status_code=400, error_code="RESPONSE004",
