@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required
 from flask_restful import Resource, fields, marshal_with
 
 from custom_error import LogicError
-from model import Response, Ticket, db
+from model import Response, Ticket, db, User
 
 
 class Responses_api(Resource):
@@ -20,6 +20,7 @@ class Responses_api(Resource):
                                                    [{
                                                        'response_id': r.response_id,
                                                        'user_id': r.user_id,
+                                                       'username': User.query.filter_by(user_id=r.user_id).first().username,
                                                        'response': r.response,
                                                        'isAnswer': r.isAnswer}
                                                     for r in x.response_list
@@ -68,7 +69,8 @@ class Responses_api(Resource):
     @marshal_with(response_output)
     def put(self, ticket_id: int, response_id: int):
 
-        obj = Response.query.filter_by(response_id=response_id, ticket_id=ticket_id).first()
+        obj = Response.query.filter_by(
+            response_id=response_id, ticket_id=ticket_id).first()
 
         if obj is None:
             raise LogicError(status_code=404, error_code="RESPONSE002",
