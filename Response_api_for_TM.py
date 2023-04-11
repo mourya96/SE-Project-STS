@@ -68,7 +68,7 @@ class Responses_api(Resource):
     @marshal_with(response_output)
     def put(self, ticket_id: int, response_id: int):
 
-        obj = Response.query.filter_by(response_id=response_id).first()
+        obj = Response.query.filter_by(response_id=response_id, ticket_id=ticket_id).first()
 
         if obj is None:
             raise LogicError(status_code=404, error_code="RESPONSE002",
