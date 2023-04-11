@@ -90,7 +90,7 @@ class Login_api(Resource):
                 raise DataError(status_code=404)
 
             obj = Staff(username=form.get('username'), email=form.get("email"),
-                        password=form.get("password"), role=form.get("role"),
+                        password=generate_password_hash(form.get("password")), role=form.get("role"),
                         subject_id=form.get('subject_id'))
         else:
             obj = User(username=form.get('username'), email=form.get("email"),

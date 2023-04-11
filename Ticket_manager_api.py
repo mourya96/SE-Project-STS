@@ -83,15 +83,18 @@ class Ticket_api(Resource):
 
         user = User.query.filter_by(user_id=user_id).first()
         # Changes in database based on action variable from form
-        if form.get("action") == 'faq':
+        if form.get("action") == 'faq' or form.get("action") == 'notfaq':
             if user.role == 'student':
                 raise LogicError(status_code=400, error_code="TICKET005",
-                                 error_msg="A student cannot mark the ticket as FAQ")
-            if ticket_obj.ticket_status == "resolved":
-                ticket_obj.isFAQ = True
-            elif ticket_obj.ticket_status == "unresolved":
-                raise LogicError(status_code=400, error_code="TICKET002",
-                                 error_msg="Ticket need to be resolved before marking as FAQ")
+                                 error_msg="A student cannot mark/unmark the ticket as FAQ")
+            if form.get("action") == 'faq':
+                if ticket_obj.ticket_status == "resolved":
+                    ticket_obj.isFAQ = True
+                elif ticket_obj.ticket_status == "unresolved":
+                    raise LogicError(status_code=400, error_code="TICKET002",
+                                     error_msg="Ticket need to be resolved before marking as FAQ")
+            elif form.get("action") == 'notfaq':
+                ticket_obj.isFAQ = False
 
         elif form.get("action") == 'like':
             for like in ticket_obj.likes:
