@@ -59,7 +59,7 @@ def login():
                 expire_time = datetime.timedelta(days=1)
                 access_token = create_access_token(
                     identity=username, expires_delta=expire_time)
-                return {'access_token': access_token, 'role': user.role, "user_id": user.user_id, "subject": Subject_Tag.query.filter_by(subject_id=staff.subject_id).subject_name}, 200
+                return {'access_token': access_token, 'role': user.role, "user_id": user.user_id, "subject": Subject_Tag.query.filter_by(subject_id=staff.subject_id).first().subject_name}, 200
 
         expire_time = datetime.timedelta(days=1)
         access_token = create_access_token(
