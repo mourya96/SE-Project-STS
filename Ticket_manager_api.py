@@ -9,12 +9,9 @@ from model import Secondary_Tag, Subject_Tag, Table_likes, Ticket, User, db
 class Ticket_api(Resource):
     '''API code for Ticket Manager'''
 
-    ticket_output = {"ticket_id": fields.Integer,
-                     "title": fields.String,
-                     "description": fields.String,
-                     "subject_name": fields.String,
-                     "sec_name": fields.String,
-                     "isFAQ": fields.Boolean,
+    ticket_output = {"ticket_id": fields.Integer, "title": fields.String,
+                     "description": fields.String, "subject_name": fields.String,
+                     "sec_name": fields.String, "isFAQ": fields.Boolean,
                      "ticket_status": fields.String,
                      "likes": fields.Integer(attribute=lambda x: len(x.likes))
                      }

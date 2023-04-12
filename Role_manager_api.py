@@ -12,10 +12,11 @@ class Role_api(Resource):
     output = {"user_id": fields.Integer, "username": fields.String,
               "email": fields.String, "role": fields.String,
               "approved": fields.Boolean(attribute='status'),
-              "subject_id": fields.Integer}
+              "subject_id": fields.Integer,
+              "subject_name": fields.String(attribute=lambda x: Subject_Tag.query.filter_by(subject_id=x.subject_id).first().subject_name)}
 
-    @jwt_required()
-    @marshal_with(output)
+    @ jwt_required()
+    @ marshal_with(output)
     def get(self):
         '''Returns a list of Staff details'''
 
@@ -32,8 +33,8 @@ class Role_api(Resource):
             raise DataError(status_code=404)
         return obj, 200
 
-    @jwt_required()
-    @marshal_with(output)
+    @ jwt_required()
+    @ marshal_with(output)
     def put(self, user_id: int):
         '''Modifies the subject_id or status for a Staff'''
 
@@ -61,7 +62,7 @@ class Role_api(Resource):
         db.session.commit()
         return obj, 202
 
-    @jwt_required()
+    @ jwt_required()
     def delete(self, user_id: int):
         '''Removes a Staff details'''
 

@@ -347,6 +347,7 @@ tags:
     description: Response API for Ticket Manager
 paths:
   /api/login/{email}:
+    summary: test.
     description: End point to read, update and delete a User data for the given email.
     get:
       tags:
@@ -1232,6 +1233,9 @@ components:
         subject_id:
           type: integer
           example: 1
+        subject_name:
+          type: string
+          example: BDM
     Ticket:
       type: object
       properties:
@@ -1290,9 +1294,12 @@ components:
         user_id:
           type: integer
           example: 3
+        username:
+          type: string
+          example: staff1
         response:
           type: string
-          example: Response given by the staff to the correspoinding ticket
+          example: Response given by the staff/student to the correspoinding ticket
         isAnswer:
           type: boolean
           example: false
@@ -1323,7 +1330,7 @@ components:
           example: week-1
         likes:
           type: integer
-          example: 10
+          example: [1, 5]
         response_list:
           type: array
           items:
