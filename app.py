@@ -9,7 +9,7 @@ from werkzeug.security import check_password_hash
 
 from custom_error import *
 from Login_manager_api import Login_api
-from model import User, db
+from model import User, Staff, Subject_Tag, db
 from Response_api_for_TM import Responses_api
 from Role_manager_api import Role_api
 from Tag_manager_api import Tag_api
@@ -45,9 +45,22 @@ def login():
     username = form.get("username")
     password = form.get("password")
     user = User.query.filter_by(username=username).first()
+    user_id = int(user.user_id)
+    print(user_id)
     if not user:
         raise DataError(status_code=404)
     if check_password_hash(pwhash=user.password, password=password):
+        if user.role == 'staff':
+            staff = Staff.query.filter_by(user_id=user_id).first()
+            if staff.status == False:
+                raise LogicError(status_code=400, error_code="USER006",
+                                 error_msg="The staff is unapproved. Please wait for approval")
+            else:
+                expire_time = datetime.timedelta(days=1)
+                access_token = create_access_token(
+                    identity=username, expires_delta=expire_time)
+                return {'access_token': access_token, 'role': user.role, "user_id": user.user_id, "subject": Subject_Tag.query.filter_by(subject_id=staff.subject_id).subject_name}, 200
+
         expire_time = datetime.timedelta(days=1)
         access_token = create_access_token(
             identity=username, expires_delta=expire_time)
