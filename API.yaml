@@ -687,7 +687,7 @@ paths:
         - Ticket
       description: >-
         Operation to Edit Ticket details. The action variable can contain string
-        `like` or `faq`
+        `like`,`faq` or `notfaq`
       operationId: editTicket
       parameters:
         - in: path
