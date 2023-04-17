@@ -1,20 +1,22 @@
 import datetime
 import os
-
-from flask import Flask, request
+import requests as rq
+from flask import Flask, request, render_template
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from flask_restful import Api
 from werkzeug.security import check_password_hash
 
-from custom_error import *
+from custom_error import DataError, LogicError
 from Login_manager_api import Login_api
-from model import User, Staff, Subject_Tag, db
+from mail_config import send_email
+from model import Staff, Subject_Tag, User, db
 from Response_api_for_TM import Responses_api
 from Role_manager_api import Role_api
 from Tag_manager_api import Tag_api
 from Ticket_manager_api import Ticket_api
 
+# Configurations
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.getcwd() + \
     '/DB_project.sqlite3'
@@ -27,16 +29,17 @@ db.init_app(app)
 app.app_context().push()
 db.create_all()
 
+# API URLS
 api.add_resource(Login_api, '/api/register', '/api/login/<string:email>')
 api.add_resource(Role_api, '/api/role', '/api/role/<int:user_id>')
 api.add_resource(Ticket_api, '/api/subject/ticket/<int:ticket_id>',
                  '/api/subject/<string:subject_name>')
-
 api.add_resource(Responses_api, '/api/response', '/api/response/<int:ticket_id>',
                  '/api/response/<int:ticket_id>/<int:response_id>')
-
 api.add_resource(Tag_api,
                  '/api/tag/<string:tag_type>', '/api/tag/<string:tag_type>/<int:tag_id>')
+
+# Controllers
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -68,6 +71,32 @@ def login():
     else:
         raise LogicError(status_code=400, error_code="USER005",
                          error_msg="Either username or password is incorrect")
+
+
+@app.route('/notify/<string:role>', methods=['POST'])
+@jwt_required()
+def notifyMail(role):
+    form = request.get_json()
+    if form.get('ticket_id') is None:
+        # if ticket-id is missing raise error
+        raise DataError(status_code=400)
+
+    if role == 'student':
+        # Sending specific notification to students abt their ticket status
+        token = request.headers['Authorization']
+        api_data = rq.get(request.url_root + 'api/response/' +
+                          form.get('ticket_id'), headers={'Authorization': token}).json()
+        author = User.query.filter_by(user_id=api_data.get('user_id')).first()
+        if get_jwt_identity() != author.username:
+            # Checking if the ticket's author posted the response then no notfication
+            send_email(to=author.email, subject="New response is posted in your ticket",
+                       msg=render_template('mail_body.html', username=author.username, responder=api_data.get('response_list')[-1].get("username"),
+                                           response=api_data.get('response_list')[-1].get("response")))
+    else:
+        # Sending notification to respective staff that new ticket has been created
+
+        pass
+    return ''
 
 
 if __name__ == "__main__":
