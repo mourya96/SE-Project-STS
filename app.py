@@ -77,26 +77,40 @@ def login():
 @jwt_required()
 def notifyMail(role):
     form = request.get_json()
-    if form.get('ticket_id') is None:
+    ticket_id = form.get('ticket_id')
+    if ticket_id is None:
         # if ticket-id is missing raise error
         raise DataError(status_code=400)
 
     if role == 'student':
         # Sending specific notification to students abt their ticket status
         token = request.headers['Authorization']
-        api_data = rq.get(request.url_root + 'api/response/' +
-                          form.get('ticket_id'), headers={'Authorization': token}).json()
-        author = User.query.filter_by(user_id=api_data.get('user_id')).first()
+        ticket_data = rq.get(request.url_root + 'api/response/' +
+                             ticket_id, headers={'Authorization': token}).json()
+        author = User.query.filter_by(
+            user_id=ticket_data.get('user_id')).first()
         if get_jwt_identity() != author.username:
             # Checking if the ticket's author posted the response then no notfication
             send_email(to=author.email, subject="New response is posted in your ticket",
-                       msg=render_template('mail_body.html', username=author.username, responder=api_data.get('response_list')[-1].get("username"),
-                                           response=api_data.get('response_list')[-1].get("response")))
+                       msg=render_template('mail_body_student.html', username=author.username,
+                                           response=ticket_data.get('response_list')[-1]))
     else:
         # Sending notification to respective staff that new ticket has been created
+        subject_name = form.get('subject_name')
+        token = request.headers['Authorization']
+        staff_list = rq.get(request.url_root + 'api/role?status=1',
+                            headers={'Authorization': token}).json()
 
-        pass
-    return ''
+        staff_list = filter(lambda x: x.get('subject_name') == subject_name,
+                            staff_list)
+        ticket_data = rq.get(request.url_root + 'api/response/' +
+                             str(ticket_id), headers={'Authorization': token}).json()
+        for staff in staff_list:
+            # print(staff)
+            send_email(to=staff.get('email'), subject="New Ticket is created",
+                       msg=render_template('mail_body_staff.html', username=staff.get('username'), ticket=ticket_data))
+
+    return 'Success', 200
 
 
 if __name__ == "__main__":
