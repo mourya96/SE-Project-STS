@@ -10,8 +10,10 @@ class Ticket_api(Resource):
     '''API code for Ticket Manager'''
 
     ticket_output = {"ticket_id": fields.Integer, "title": fields.String,
-                     "description": fields.String, "subject_name": fields.String,
-                     "sec_name": fields.String, "isFAQ": fields.Boolean,
+                     "description": fields.String,
+                     "subject_name": fields.String(attribute=lambda x: Subject_Tag.query.filter_by(subject_id=x.subject_id).first().subject_name),
+                     "sec_name": fields.String(attribute=lambda x: Secondary_Tag.query.filter_by(sec_tag_id=x.sec_id).first().sec_tag_name),
+                     "isFAQ": fields.Boolean,
                      "ticket_status": fields.String,
                      "likes": fields.Integer(attribute=lambda x: len(x.likes))
                      }
@@ -22,12 +24,12 @@ class Ticket_api(Resource):
 
         # extracts all the query parameters from the endpoint and converts it into a dictionary
         params = request.args.to_dict()
-        filter_dict = {'subject_name': subject_name}
         keyword = ""
         limit = 0
         # using the params dictionary we add keys and values to the filter_dict dictionary
         # and initialize the values
         obj = Subject_Tag.query.filter_by(subject_name=subject_name).first()
+        filter_dict = {'subject_id': obj.subject_id}
         if obj is None:
             raise LogicError(status_code=404, error_code="TICKET006",
                              error_msg="invalid subject")
@@ -45,7 +47,8 @@ class Ticket_api(Resource):
                 else:
                     filter_dict['ticket_status'] = 'resolved'
             elif key == 'TagName':
-                filter_dict['sec_name'] = params[key]
+                filter_dict['sec_id'] = Secondary_Tag.query.filter_by(
+                    sec_tag_name=params[key]).first().sec_tag_id
             elif key == 'search':
                 keyword = params[key]
 
@@ -112,9 +115,9 @@ class Ticket_api(Resource):
     def post(self, subject_name: str):
         '''Creates a new ticket for a subject'''
 
-        subject = Subject_Tag.query.filter_by(
+        subject_obj = Subject_Tag.query.filter_by(
             subject_name=subject_name).first()
-        if subject is None:
+        if subject_obj is None:
             raise DataError(status_code=404)
 
         # Getting form data
@@ -132,7 +135,8 @@ class Ticket_api(Resource):
             raise LogicError(status_code=400, error_code="TICKET003",
                              error_msg="Some data required for creating ticket is missing")
 
-        tickets = Ticket.query.filter_by(subject_name=subject_name).all()
+        tickets = Ticket.query.filter_by(
+            subject_id=subject_obj.subject_id).all()
 
         # Checking for duplicate titles
         for ticket in tickets:
@@ -147,7 +151,8 @@ class Ticket_api(Resource):
 
         # Creating ticket obj and committing to database
         ticket_obj = Ticket(user_id=user_id, title=title,
-                            description=desc, subject_name=subject_name, sec_name=sec)
+                            description=desc, subject_id=subject_obj.subject_id,
+                            sec_id=sec_obj.sec_tag_id)
         db.session.add(ticket_obj)
         db.session.commit()
         return ticket_obj, 201

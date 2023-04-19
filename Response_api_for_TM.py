@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required
 from flask_restful import Resource, fields, marshal_with
 
 from custom_error import LogicError
-from model import Response, Ticket, db, User
+from model import Response, Secondary_Tag, Subject_Tag, Ticket, User, db
 
 
 class Responses_api(Resource):
@@ -14,7 +14,8 @@ class Responses_api(Resource):
     response_output = {'ticket_id': fields.Integer, 'title': fields.String,
                        'description': fields.String, 'isFAQ': fields.Boolean,
                        'user_id': fields.Integer, 'ticket_status': fields.String,
-                       'subject_name': fields.String, 'sec_name': fields.String,
+                       "subject_name": fields.String(attribute=lambda x: Subject_Tag.query.filter_by(subject_id=x.subject_id).first().subject_name),
+                       "sec_name": fields.String(attribute=lambda x: Secondary_Tag.query.filter_by(sec_tag_id=x.sec_id).first().sec_tag_name),
                        'likes': fields.Raw(attribute=lambda x: [i.user_id for i in x.likes]),
                        'response_list': fields.Raw(attribute=lambda x:
                                                    [{

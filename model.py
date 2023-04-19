@@ -50,10 +50,10 @@ class Ticket(db.Model):
     isFAQ = db.Column(db.Boolean, nullable=False, default=False)
     ticket_status = db.Column(db.String, nullable=False, default='unresolved')
     likes = db.relationship("Table_likes", cascade='delete')
-    subject_name = db.Column(db.String, db.ForeignKey('Subject_Tag.subject_name'),
-                             nullable=False)
-    sec_name = db.Column(db.String,
-                         db.ForeignKey('Secondary_Tag.sec_tag_name'))
+    subject_id = db.Column(db.String, db.ForeignKey('Subject_Tag.subject_id'),
+                           nullable=False)
+    sec_id = db.Column(db.String,
+                       db.ForeignKey('Secondary_Tag.sec_tag_id'))
     response_list = db.relationship("Response", cascade="delete")
 
 
